@@ -161,7 +161,7 @@ export default function Hero() {
             maxWidth: '900px'
           }}
         >
-          {['ICEICO Technologies', 'YCCE Research', 'Render Cloud', 'IBM SkillsBuild', 'Tata Forage'].map((name, i) => (
+          {['ICEICO Technologies Pvt. Ltd.', 'YCCE — Nagpur'].map((name, i) => (
             <span key={i} style={{
               fontFamily: 'var(--font-mono)',
               fontSize: '0.68rem',

@@ -78,7 +78,12 @@ export default function Playground() {
   const chatEndRef = useRef(null);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatEndRef.current) {
+      const container = chatEndRef.current.closest('[style*="overflow"]');
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    }
   }, [messages]);
 
   const saveSettings = () => {

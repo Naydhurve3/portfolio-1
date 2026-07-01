@@ -40,17 +40,26 @@ export const education = [
   {
     period: '2021 – 2025',
     degree: 'B.Tech in Information Technology',
-    institution: 'Yeshwantrao Chavan College of Engineering (YCCE), Nagpur'
+    institution: 'Yeshwantrao Chavan College of Engineering (YCCE), Nagpur',
+    location: 'Nagpur, Maharashtra',
+    mapUrl: 'https://maps.app.goo.gl/wWTX3fwgegxdQ5VGA',
+    websiteUrl: 'https://www.ycce.edu/'
   },
   {
     period: '2018 – 2020',
     degree: 'Higher Secondary Certificate (HSC)',
-    institution: 'Lakhotiya Bhutada High School and Junior College, Kondhali'
+    institution: 'Lakhotiya Bhutada High School and Junior College, Kondhali',
+    location: 'Kondhali, Maharashtra',
+    mapUrl: 'https://maps.app.goo.gl/J7ymzmzUqFJFU5Hn7',
+    websiteUrl: null
   },
   {
     period: '2012 – 2018',
     degree: 'Secondary School Certificate (SSC)',
-    institution: 'Lakhotiya Bhutada High School and Junior College, Kondhali'
+    institution: 'Lakhotiya Bhutada High School and Junior College, Kondhali',
+    location: 'Kondhali, Maharashtra',
+    mapUrl: 'https://maps.app.goo.gl/J7ymzmzUqFJFU5Hn7',
+    websiteUrl: null
   }
 ];
 

@@ -100,7 +100,7 @@ export default function Contact() {
     <section id="contact" style={{ padding: '8rem 0' }}>
       {showResume && (
         <CertificateModal
-          pdfUrl="/certificates/Nayan_Dhurve_Resume.pdf"
+          pdfUrl="/certificates/Resume.pdf"
           title="Resume — Nayan Dhurve"
           onClose={() => setShowResume(false)}
         />

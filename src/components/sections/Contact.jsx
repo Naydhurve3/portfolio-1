@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Mail, Phone } from 'lucide-react';
+import { Send, Mail, Phone, FileText } from 'lucide-react';
+import CertificateModal from '../shared/CertificateModal';
 
 const GithubIcon = ({ size = 16 }) => (
   <svg
@@ -46,6 +47,7 @@ export default function Contact() {
   const [formState, setFormState] = useState({ name: '', email: '', subject: '', message: '' });
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [showResume, setShowResume] = useState(false);
 
   const validate = () => {
     const errs = {};
@@ -96,6 +98,13 @@ export default function Contact() {
 
   return (
     <section id="contact" style={{ padding: '8rem 0' }}>
+      {showResume && (
+        <CertificateModal
+          pdfUrl="/certificates/Nayan_Dhurve_Resume.pdf"
+          title="Resume — Nayan Dhurve"
+          onClose={() => setShowResume(false)}
+        />
+      )}
       <div className="container">
         <motion.span className="section-num" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
           08 / connect
@@ -174,15 +183,15 @@ export default function Contact() {
 
             {/* Social Links */}
             <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-              {[
-                { icon: <GithubIcon size={16} />, label: 'GitHub', href: 'https://github.com/Naydhurve3' },
-                { icon: <LinkedinIcon size={16} />, label: 'LinkedIn', href: 'https://www.linkedin.com/in/nayan-dhurve-31815a258' },
-                { icon: <Mail size={16} />, label: 'Resume', href: '/Resume.pdf' },
-              ].map((social, i) => (
-                <a key={i} href={social.href} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm">
-                  {social.icon} {social.label}
-                </a>
-              ))}
+              <a href="https://github.com/Naydhurve3" target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <GithubIcon size={16} /> GitHub
+              </a>
+              <a href="https://www.linkedin.com/in/nayan-dhurve-31815a258" target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <LinkedinIcon size={16} /> LinkedIn
+              </a>
+              <button onClick={() => setShowResume(true)} className="btn btn-accent btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
+                <FileText size={16} /> Resume
+              </button>
             </div>
           </motion.div>
 

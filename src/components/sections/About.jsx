@@ -1,13 +1,9 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { education, certifications } from '../../data/experience';
-
-const editorialCards = [
-  { label: 'Who I Am', title: 'AI & Developer', text: 'B.Tech IT graduate specializing in AI Engineering and Data Science. Passionate about building robust, scalable, and intelligent systems.' },
-  { label: 'Mission', title: 'Bridges & Value', text: 'To bridge the gap between machine learning models and high-performance product deployments, ensuring AI delivers measurable, explainable business value.' },
-  { label: 'What I Build', title: 'RAG & CNNs', text: 'Retrieval-Augmented Generation (RAG) agents, custom deep learning models (CNNs/CV), and robust pipeline integrations using Python and Vector databases.' },
-  { label: 'Current Focus', title: 'Agents & Ops', text: 'Agentic workflows, prompt engineering optimization, local vector indexes, and deploying containerized, full-stack AI solutions.' },
-  { label: 'Beyond Coding', title: 'Lab & Writing', text: 'A dedicated learner tracking open-source AI advancements, actively contributing to technical writings, and building interactive micro-experiments.' },
-];
+import { education } from '../../data/experience';
+import { certificates } from '../../data/certificates';
+import CertificateModal from '../shared/CertificateModal';
+import { ExternalLink, FileText } from 'lucide-react';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 25 },
@@ -15,8 +11,19 @@ const fadeUp = {
 };
 
 export default function About() {
+  const [modalCert, setModalCert] = useState(null);
+  const [flippedCert, setFlippedCert] = useState(null);
+
   return (
     <section id="about" style={{ padding: '8rem 0' }}>
+      {modalCert && (
+        <CertificateModal
+          pdfUrl={modalCert.pdfUrl}
+          title={modalCert.title}
+          onClose={() => setModalCert(null)}
+        />
+      )}
+
       <div className="container">
         <motion.span className="section-num" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
           01 / profile
@@ -24,61 +31,6 @@ export default function About() {
         <motion.h2 className="section-title" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
           About Me
         </motion.h2>
-
-        {/* Editorial Cards */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-40px' }}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '2.5rem',
-            marginBottom: '4rem'
-          }}
-        >
-          {editorialCards.map((card, i) => (
-            <motion.div
-              key={i}
-              variants={fadeUp}
-              transition={{ delay: i * 0.1 }}
-              style={{
-                borderLeft: '1px solid var(--border)',
-                paddingLeft: '1.5rem',
-                position: 'relative'
-              }}
-            >
-              <span style={{
-                position: 'absolute',
-                left: '-5px',
-                top: '-24px',
-                color: 'var(--accent)',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.85rem',
-                fontWeight: 'bold'
-              }}>↓</span>
-              <span style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.72rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                color: 'var(--accent)',
-                marginBottom: '0.75rem',
-                display: 'block'
-              }}>{card.label}</span>
-              <h3 style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: '1.25rem',
-                fontWeight: 700,
-                marginBottom: '1rem',
-                letterSpacing: '-0.02em'
-              }}>{card.title}</h3>
-              <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                {card.text}
-              </p>
-            </motion.div>
-          ))}
-        </motion.div>
 
         {/* Education + Certifications Grid */}
         <div style={{
@@ -123,20 +75,107 @@ export default function About() {
             <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '1.5rem', fontFamily: 'var(--font-heading)' }}>
               📜 Certifications
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {certifications.map((cert, i) => (
-                <div key={i} style={{
-                  padding: '1rem 1.4rem',
-                  borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--border)',
-                  background: 'var(--card-bg)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
-                  <span style={{ fontSize: '0.88rem', fontWeight: 600 }}>{cert.name}</span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--text-muted)' }}>{cert.org}</span>
-                </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {certificates.map((cert, i) => (
+                <motion.div
+                  key={cert.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08, duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+                  style={{
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid var(--border)',
+                    background: 'var(--card-bg)',
+                    backdropFilter: 'blur(15px)',
+                    overflow: 'hidden',
+                    transition: 'all 0.3s ease',
+                    position: 'relative',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = 'var(--accent)';
+                    e.currentTarget.style.boxShadow = '0 0 25px var(--accent-glow), inset 0 0 25px rgba(129,140,248,0.05)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = 'var(--border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <div style={{
+                    padding: '1.2rem 1.4rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.6rem',
+                  }}>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                    }}>
+                      <div>
+                        <div style={{
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '0.9rem',
+                          fontWeight: 700,
+                          letterSpacing: '-0.02em',
+                        }}>{cert.title}</div>
+                        <div style={{
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: '0.7rem',
+                          color: 'var(--accent)',
+                          marginTop: '0.15rem',
+                        }}>{cert.org} · {cert.date}</div>
+                      </div>
+                      <button
+                        onClick={() => setModalCert(cert)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.3rem',
+                          padding: '0.35rem 0.7rem',
+                          borderRadius: '6px',
+                          border: '1px solid var(--border)',
+                          background: 'transparent',
+                          color: 'var(--text-secondary)',
+                          fontSize: '0.7rem',
+                          fontFamily: 'var(--font-mono)',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                          whiteSpace: 'nowrap',
+                          flexShrink: 0,
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+                      >
+                        <FileText size={12} /> View
+                      </button>
+                    </div>
+
+                    <p style={{
+                      fontSize: '0.78rem',
+                      color: 'var(--text-secondary)',
+                      lineHeight: 1.6,
+                    }}>{cert.description}</p>
+
+                    <div style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: '0.3rem',
+                    }}>
+                      {cert.skills.map((skill, si) => (
+                        <span key={si} style={{
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: '0.62rem',
+                          padding: '0.15rem 0.45rem',
+                          borderRadius: '4px',
+                          background: 'var(--surface-hover)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--text-muted)',
+                        }}>{skill}</span>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
               ))}
             </div>
           </motion.div>

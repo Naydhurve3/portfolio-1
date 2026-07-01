@@ -3,31 +3,36 @@ export const experience = [
     year: '2026',
     title: 'CosmoGuide — Space Exploration Cockpit',
     subtitle: 'Full-Stack AI Development · Live at cosmoguide.onrender.com',
-    description: 'Built a multi-provider AI space exploration app with React 19, TypeScript, and Express.js. Integrated 11 AI providers (Gemini, Groq, Anthropic, OpenRouter, NVIDIA NIM, etc.) with a hybrid API key model. Developed 3D Kepler orbital simulations, space weather tracking, star charts, and generative AI art. Deployed on Render with rate-limited demo fallback.'
+    description: 'Built a multi-provider AI space exploration app with React 19, TypeScript, and Express.js. Integrated 11 AI providers (Gemini, Groq, Anthropic, OpenRouter, NVIDIA NIM, etc.) with a hybrid API key model. Developed 3D Kepler orbital simulations, space weather tracking, star charts, and generative AI art. Deployed on Render with rate-limited demo fallback.',
+    certificateUrl: null
   },
   {
     year: '2026',
     title: 'ATM & Banking Ecosystem v3.0',
     subtitle: '20 ML/DL Models · Real RBI Banking Data',
-    description: 'Built a comprehensive banking simulation with 20 ML/DL models including Prophet, XGBoost, and LSTM. Ingested real RBI data from 65 Indian banks. Features ATM simulator with fraud detection, credit scoring, KYC system, and interactive Flask/Plotly dashboard.'
+    description: 'Built a comprehensive banking simulation with 20 ML/DL models including Prophet, XGBoost, and LSTM. Ingested real RBI data from 65 Indian banks. Features ATM simulator with fraud detection, credit scoring, KYC system, and interactive Flask/Plotly dashboard.',
+    certificateUrl: null
   },
   {
     year: '2025',
     title: 'Data Analytics Intern',
     subtitle: 'ICEICO Technologies Pvt. Ltd. · Jan 2025 – Jul 2025',
-    description: 'Analyzed 3,000+ employee records, built interactive KPI-driven Power BI reports, and constructed attrition prediction models (Random Forest, XGBoost) to reduce churn risk identification time.'
+    description: 'Analyzed 3,000+ employee records, built interactive KPI-driven Power BI reports, and constructed attrition prediction models (Random Forest, XGBoost) to reduce churn risk identification time.',
+    certificateUrl: '/certificates/iceico-internship.pdf'
   },
   {
     year: '2024',
     title: 'Deep Learning & RAG Projects',
     subtitle: 'YCCE Research & Projects',
-    description: 'Engineered medical classification pipelines (ResNet50 models for tumor detection with 89% accuracy) and local vector-retrieval systems (CosmoGuide Streamlit space companion).'
+    description: 'Engineered medical classification pipelines (ResNet50 models for tumor detection) and local vector-retrieval systems (CosmoGuide Streamlit space companion).',
+    certificateUrl: null
   },
   {
     year: '2023',
     title: 'Statistical Foundations',
     subtitle: 'Core ML & Web Stack',
-    description: 'Mastered Python preprocessing libraries (Pandas, NumPy, Matplotlib) and explored algorithmic fundamentals in Machine Learning and relational SQL querying.'
+    description: 'Mastered Python preprocessing libraries (Pandas, NumPy, Matplotlib) and explored algorithmic fundamentals in Machine Learning and relational SQL querying.',
+    certificateUrl: null
   }
 ];
 
@@ -35,17 +40,17 @@ export const education = [
   {
     period: '2021 – 2025',
     degree: 'B.Tech in Information Technology',
-    institution: 'Yeshwantrao Chavan College of Engineering (YCCE), Nagpur · CGPA: 8.4/10'
+    institution: 'Yeshwantrao Chavan College of Engineering (YCCE), Nagpur'
   },
   {
     period: '2018 – 2020',
     degree: 'Higher Secondary Certificate (HSC)',
-    institution: 'Lakhotiya Bhutada High School and Junior College, Kondhali · 78%'
+    institution: 'Lakhotiya Bhutada High School and Junior College, Kondhali'
   },
   {
     period: '2012 – 2018',
     degree: 'Secondary School Certificate (SSC)',
-    institution: 'Lakhotiya Bhutada High School and Junior College, Kondhali · 89%'
+    institution: 'Lakhotiya Bhutada High School and Junior College, Kondhali'
   }
 ];
 

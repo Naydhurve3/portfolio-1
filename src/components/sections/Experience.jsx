@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { experience } from '../../data/experience';
+import CertificateModal from '../shared/CertificateModal';
+import { FileText } from 'lucide-react';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 25 },
@@ -7,8 +10,19 @@ const fadeUp = {
 };
 
 export default function Experience() {
+  const [modalUrl, setModalUrl] = useState(null);
+  const [modalTitle, setModalTitle] = useState('');
+
   return (
     <section id="experience" style={{ padding: '8rem 0' }}>
+      {modalUrl && (
+        <CertificateModal
+          pdfUrl={modalUrl}
+          title={modalTitle}
+          onClose={() => { setModalUrl(null); setModalTitle(''); }}
+        />
+      )}
+
       <div className="container">
         <motion.span className="section-num" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
           04 / history
@@ -23,7 +37,6 @@ export default function Experience() {
           margin: '0 auto',
           paddingLeft: '2rem'
         }}>
-          {/* Vertical line */}
           <div style={{
             position: 'absolute',
             left: '3.5px',
@@ -45,7 +58,6 @@ export default function Experience() {
                 marginBottom: i < experience.length - 1 ? '4rem' : 0
               }}
             >
-              {/* Timeline dot */}
               <div style={{
                 position: 'absolute',
                 left: 'calc(-2rem - 3.5px)',
@@ -83,6 +95,31 @@ export default function Experience() {
                 fontSize: '0.9rem',
                 lineHeight: 1.7
               }}>{item.description}</p>
+
+              {item.certificateUrl && (
+                <button
+                  onClick={() => { setModalUrl(item.certificateUrl); setModalTitle(item.title); }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    marginTop: '1rem',
+                    padding: '0.4rem 0.85rem',
+                    borderRadius: '6px',
+                    border: '1px solid var(--border)',
+                    background: 'transparent',
+                    color: 'var(--accent)',
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-mono)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-glow)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'transparent'; }}
+                >
+                  <FileText size={13} /> View Completion Certificate
+                </button>
+              )}
             </motion.div>
           ))}
         </div>

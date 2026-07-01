@@ -10,6 +10,27 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 1, 0.5, 1] } }
 };
 
+const colors = ['#818cf8', '#10b981', '#a855f7', '#f43f5e'];
+
+function ProficiencyDots({ level = 4, total = 5, color }) {
+  return (
+    <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+      {Array.from({ length: total }, (_, i) => (
+        <div
+          key={i}
+          style={{
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            background: i < level ? color : 'var(--border)',
+            transition: 'background 0.3s ease',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function SkillCard({ skill, index }) {
   const cardRef = useRef(null);
   const IconComponent = iconMap[skill.icon];
@@ -35,6 +56,8 @@ function SkillCard({ skill, index }) {
     }
   };
 
+  const color = colors[index % colors.length];
+
   return (
     <motion.div
       ref={cardRef}
@@ -44,77 +67,89 @@ function SkillCard({ skill, index }) {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        border: '1px solid var(--border)',
         borderRadius: 'var(--radius-lg)',
-        padding: '2.2rem',
+        padding: '2rem',
         background: 'var(--card-bg)',
         backdropFilter: 'blur(15px)',
-        transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+        transition: 'box-shadow 0.3s ease',
         transformStyle: 'preserve-3d',
         boxShadow: 'var(--card-shadow)',
         position: 'relative',
         overflow: 'hidden',
-        cursor: 'default'
+        cursor: 'default',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = 'var(--accent)';
-        e.currentTarget.style.boxShadow = '0 15px 35px var(--accent-glow)';
+        e.currentTarget.style.boxShadow = `0 15px 35px ${color}20, 0 0 0 1px ${color}`;
       }}
       onMouseLeaveCapture={(e) => {
-        e.currentTarget.style.borderColor = 'var(--border)';
         e.currentTarget.style.boxShadow = 'var(--card-shadow)';
       }}
     >
-      {/* Glow follower */}
       <div style={{
         position: 'absolute',
         inset: 0,
-        background: 'radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--glow) 0%, transparent 100%)',
+        background: `radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), ${color}08 0%, transparent 100%)`,
         pointerEvents: 'none',
         zIndex: 1
       }} />
 
-      {/* Header */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '1.5rem',
-        borderBottom: '1px solid var(--border)',
-        paddingBottom: '1rem',
-        transform: 'translateZ(10px)',
+        marginBottom: '1rem',
         position: 'relative',
-        zIndex: 2
+        zIndex: 2,
       }}>
-        <span style={{
-          fontFamily: 'var(--font-heading)',
-          fontSize: '1.15rem',
-          fontWeight: 700,
-          letterSpacing: '-0.02em'
-        }}>{skill.title}</span>
-        <div style={{
-          width: '36px',
-          height: '36px',
-          color: 'var(--accent)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          {IconComponent && <IconComponent size={26} strokeWidth={1.75} />}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: color,
+            background: `${color}15`,
+          }}>
+            {IconComponent && <IconComponent size={22} strokeWidth={1.75} />}
+          </div>
+          <div>
+            <span style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '1rem',
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+              display: 'block',
+            }}>{skill.title}</span>
+            <ProficiencyDots level={index === 0 ? 4 : index === 1 ? 4 : index === 2 ? 4 : 3} color={color} />
+          </div>
         </div>
       </div>
 
-      {/* Tech chips */}
       <div style={{
         display: 'flex',
         flexWrap: 'wrap',
-        gap: '0.5rem',
+        gap: '0.4rem',
         transform: 'translateZ(25px)',
         position: 'relative',
-        zIndex: 2
+        zIndex: 2,
       }}>
         {skill.technologies.map((tech, i) => (
-          <span key={i} className="skill-chip">{tech}</span>
+          <motion.span
+            key={i}
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 + i * 0.03, duration: 0.3 }}
+            className="skill-chip"
+            style={{
+              transition: 'all 0.2s ease',
+              border: '1px solid var(--border)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = color; e.currentTarget.style.color = color; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = ''; }}
+          >{tech}</motion.span>
         ))}
       </div>
     </motion.div>
@@ -129,7 +164,7 @@ export default function Skills() {
           02 / capabilities
         </motion.span>
         <motion.h2 className="section-title" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-          Core Skills
+          Atlas of Capabilities
         </motion.h2>
 
         <motion.div

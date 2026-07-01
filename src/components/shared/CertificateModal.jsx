@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, FileText } from 'lucide-react';
 
 export default function CertificateModal({ pdfUrl, title, onClose }) {
+  const viewerUrl = pdfUrl.includes('?') ? `${pdfUrl}&toolbar=0` : `${pdfUrl}#toolbar=0`;
   const overlayRef = useRef(null);
 
   useEffect(() => {
@@ -77,8 +78,7 @@ export default function CertificateModal({ pdfUrl, title, onClose }) {
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <a
                 href={pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                download
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -97,7 +97,7 @@ export default function CertificateModal({ pdfUrl, title, onClose }) {
                 onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = '#fff'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = '#27272a'; e.currentTarget.style.color = '#a1a1aa'; }}
               >
-                <ExternalLink size={12} /> Open in new tab
+                <ExternalLink size={12} /> Download PDF
               </a>
               <button
                 onClick={onClose}
@@ -124,7 +124,7 @@ export default function CertificateModal({ pdfUrl, title, onClose }) {
 
           <div style={{ flexGrow: 1, background: '#08080a' }}>
             <embed
-              src={pdfUrl}
+              src={viewerUrl}
               type="application/pdf"
               style={{ width: '100%', height: '100%', border: 'none' }}
             />

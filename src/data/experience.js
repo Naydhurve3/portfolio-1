@@ -18,7 +18,7 @@ export const experience = [
     title: 'Data Analytics Intern',
     subtitle: 'ICEICO Technologies Pvt. Ltd. · Jan 2025 – Jul 2025',
     description: 'Analyzed 3,000+ employee records, built interactive KPI-driven Power BI reports, and constructed attrition prediction models (Random Forest, XGBoost) to reduce churn risk identification time.',
-    certificateUrl: '/certificates/iceico-internship.pdf'
+    certificateUrl: '/certificates/ICEICO INTERNSHIP CERTIFICATE.pdf'
   },
   {
     year: '2024',

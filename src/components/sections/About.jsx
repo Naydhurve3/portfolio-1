@@ -126,29 +126,58 @@ export default function About() {
                           marginTop: '0.15rem',
                         }}>{cert.org} · {cert.date}</div>
                       </div>
-                      <button
-                        onClick={() => setModalCert(cert)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.3rem',
-                          padding: '0.35rem 0.7rem',
-                          borderRadius: '6px',
-                          border: '1px solid var(--border)',
-                          background: 'transparent',
-                          color: 'var(--text-secondary)',
-                          fontSize: '0.7rem',
-                          fontFamily: 'var(--font-mono)',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s',
-                          whiteSpace: 'nowrap',
-                          flexShrink: 0,
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
-                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
-                      >
-                        <FileText size={12} /> View
-                      </button>
+                      {cert.pdfUrl ? (
+                        <button
+                          onClick={() => setModalCert(cert)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.3rem',
+                            padding: '0.35rem 0.7rem',
+                            borderRadius: '6px',
+                            border: '1px solid var(--border)',
+                            background: 'transparent',
+                            color: 'var(--text-secondary)',
+                            fontSize: '0.7rem',
+                            fontFamily: 'var(--font-mono)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            whiteSpace: 'nowrap',
+                            flexShrink: 0,
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+                        >
+                          <FileText size={12} /> View
+                        </button>
+                      ) : (
+                        <a
+                          href={cert.credentialUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.3rem',
+                            padding: '0.35rem 0.7rem',
+                            borderRadius: '6px',
+                            border: '1px solid var(--border)',
+                            background: 'transparent',
+                            color: 'var(--text-secondary)',
+                            fontSize: '0.7rem',
+                            fontFamily: 'var(--font-mono)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            whiteSpace: 'nowrap',
+                            flexShrink: 0,
+                            textDecoration: 'none',
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = 'var(--accent)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-secondary)'; }}
+                        >
+                          <ExternalLink size={12} /> Verify
+                        </a>
+                      )}
                     </div>
 
                     <p style={{

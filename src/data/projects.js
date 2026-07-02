@@ -9,11 +9,11 @@ export const projects = [
     caseStudy: {
       problem: 'Space education tools are either static websites with no interactivity or require deep technical knowledge. Wanted to learn how to build a production-grade multi-LLM system with real-time data integration.',
       solution: 'Designed and built the AI/ML backend — FAISS vector embeddings for semantic search, LangChain retrieval pipeline, multi-provider routing across Gemini, Groq, Anthropic, OpenRouter, NVIDIA NIM, and more with automatic fallback. Integrated NASA APOD API for live astronomy data. Used references for the React 19 frontend and Express.js proxy layer.',
-      results: 'Live at cosmoguide.onrender.com. Supports 11 AI providers with sub-second query responses, 3D orbital simulations, and a hybrid API key model where users can bring their own keys or use the demo fallback.'
+      results: 'Live at cosmo-guide-eta.vercel.app. Supports 11 AI providers with sub-second query responses, 3D orbital simulations, and a hybrid API key model where users can bring their own keys or use the demo fallback.'
     },
     chips: ['Python', 'FAISS', 'LangChain', 'Gemini API', 'Groq', 'RAG', 'React', 'Express.js', '3D Canvas'],
     github: 'https://github.com/Naydhurve3/CosmoGuide',
-    live: 'https://cosmoguide.onrender.com/',
+    live: 'https://cosmo-guide-eta.vercel.app/',
     color: '#818cf8',
     accentColor: '#10b981'
   },

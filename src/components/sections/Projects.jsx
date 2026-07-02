@@ -275,7 +275,7 @@ function ProjectDiagram({ project }) {
         <text x="250" y="174" fill="#10b981" fontSize="6" textAnchor="middle" fontFamily="var(--font-mono)" opacity="0.7">11 PROVIDER ROUTING</text>
         <rect x="315" y="160" width="85" height="22" rx="4" fill="none" stroke="#f43f5e" strokeWidth="0.75" opacity="0.5"/>
         <text x="357" y="174" fill="#f43f5e" fontSize="6" textAnchor="middle" fontFamily="var(--font-mono)" opacity="0.7">CASCADING FALLBACK</text>
-        <text x="250" y="220" fill="var(--accent)" fontSize="7" textAnchor="middle" fontFamily="var(--font-mono)">Live: cosmoguide.onrender.com</text>
+        <text x="250" y="220" fill="var(--accent)" fontSize="7" textAnchor="middle" fontFamily="var(--font-mono)">Live: cosmo-guide-eta.vercel.app</text>
       </svg>
     );
   }

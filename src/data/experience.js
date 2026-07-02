@@ -2,7 +2,7 @@ export const experience = [
   {
     year: '2026',
     title: 'CosmoGuide — Space Exploration Cockpit',
-    subtitle: 'Full-Stack AI Development · Live at cosmoguide.onrender.com',
+    subtitle: 'Full-Stack AI Development · Live at cosmo-guide-eta.vercel.app',
     description: 'Built a multi-provider AI space exploration app with React 19, TypeScript, and Express.js. Integrated 11 AI providers (Gemini, Groq, Anthropic, OpenRouter, NVIDIA NIM, etc.) with a hybrid API key model. Developed 3D Kepler orbital simulations, space weather tracking, star charts, and generative AI art. Deployed on Render with rate-limited demo fallback.',
     certificateUrl: null
   },

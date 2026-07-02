@@ -16,7 +16,7 @@ const fadeUp = {
     {
       id: "project_cosmoguide",
       title: "CosmoGuide — Space Exploration Cockpit",
-      content: "CosmoGuide is Nayan's flagship project — an interactive space exploration web app (React 19, TypeScript, Vite 6, Tailwind CSS 4.1) with an Express.js backend serving as a proxy to 11 AI providers (Gemini, Groq, Anthropic, OpenRouter, NVIDIA NIM, Together AI, DeepSeek, Mistral, Cohere, Perplexity, HuggingFace). Features a 3D Kepler orbital simulator, heliophysics space weather tracking, interactive star charts, astronomy quiz engine, generative AI space art (Astro Vision), mission control with live launch countdowns, and a Hubble Birthday Time Machine. Uses a hybrid API key model — users can bring their own keys for unlimited access or use the server demo fallback (50 req/day). Live at cosmoguide.onrender.com."
+      content: "CosmoGuide is Nayan's flagship project — an interactive space exploration web app (React 19, TypeScript, Vite 6, Tailwind CSS 4.1) with an Express.js backend serving as a proxy to 11 AI providers (Gemini, Groq, Anthropic, OpenRouter, NVIDIA NIM, Together AI, DeepSeek, Mistral, Cohere, Perplexity, HuggingFace). Features a 3D Kepler orbital simulator, heliophysics space weather tracking, interactive star charts, astronomy quiz engine, generative AI space art (Astro Vision), mission control with live launch countdowns, and a Hubble Birthday Time Machine. Uses a hybrid API key model — users can bring their own keys for unlimited access or use the server demo fallback (50 req/day). Live at cosmo-guide-eta.vercel.app."
     },
     {
       id: "project_atm_simulation",
@@ -137,7 +137,7 @@ export default function Playground() {
       return intro + "Nayan Dhurve is an IT B.Tech graduate (2021-2025) from YCCE Nagpur. He holds an 8.4/10 CGPA and is an AI Engineer specializing in deep learning, LLM pipelines, and full-stack software development.";
     }
     if (bestMatch.id === "project_cosmoguide") {
-      return intro + "Nayan built CosmoGuide — a full space exploration cockpit (React 19, TypeScript, Express.js) with 11 AI providers (Gemini, Groq, Anthropic, OpenRouter, NVIDIA, Together, DeepSeek, Mistral, Cohere, Perplexity, HuggingFace). Features 3D Kepler orbital sim, space weather tracker, star chart, quiz engine, generative AI art, and Hubble Time Machine. Live at cosmoguide.onrender.com.";
+      return intro + "Nayan built CosmoGuide — a full space exploration cockpit (React 19, TypeScript, Express.js) with 11 AI providers (Gemini, Groq, Anthropic, OpenRouter, NVIDIA, Together, DeepSeek, Mistral, Cohere, Perplexity, HuggingFace). Features 3D Kepler orbital sim, space weather tracker, star chart, quiz engine, generative AI art, and Hubble Time Machine. Live at cosmo-guide-eta.vercel.app.";
     }
     if (bestMatch.id === "project_atm_simulation") {
       return intro + "Nayan built an ATM & Banking Ecosystem with 20 ML/DL models using real RBI data from 65 Indian banks. Includes ATM simulator with fraud detection, user KYC system, credit scoring, Prophet forecasting, XGBoost prediction, LSTM deep learning, and a Flask/Plotly web dashboard.";

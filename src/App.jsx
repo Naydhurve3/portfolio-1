@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { lazy, Suspense, useState, useEffect, useCallback } from 'react';
 import Preloader from './components/layout/Preloader';
 import Navbar from './components/layout/Navbar';
 import CustomCursor from './components/layout/CustomCursor';
@@ -14,8 +14,14 @@ import Experience from './components/sections/Experience';
 import Contact from './components/sections/Contact';
 import Footer from './components/layout/Footer';
 
+const AdminPage = lazy(() => import('./components/admin/AdminPage'));
+
 function App() {
+  if (window.location.pathname.startsWith('/admin')) {
+    return <Suspense fallback={<main className="admin-shell admin-shell--center">Opening private control room…</main>}><AdminPage /></Suspense>;
+  }
   const [loading, setLoading] = useState(true);
+  const [publicSettings, setPublicSettings] = useState({});
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('portfolio-theme') || 'dark';
   });
@@ -24,6 +30,13 @@ function App() {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('portfolio-theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    fetch('/api/public-settings')
+      .then(response => response.ok ? response.json() : {})
+      .then(setPublicSettings)
+      .catch(() => {});
+  }, []);
 
   const toggleTheme = useCallback(() => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
@@ -46,16 +59,20 @@ function App() {
 
           <Navbar theme={theme} toggleTheme={toggleTheme} />
 
+          {publicSettings.announcement && (
+            <div className="site-announcement" role="status">{publicSettings.announcement}</div>
+          )}
+
           <main>
             <Hero />
             <About />
             <Skills />
             <Projects />
             <Experience />
-            <Contact />
+            <Contact publicSettings={publicSettings} />
           </main>
 
-          <Footer />
+          <Footer publicSettings={publicSettings} />
           <QuickContact />
           <BackToTop />
         </>

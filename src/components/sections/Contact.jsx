@@ -45,7 +45,7 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 1, 0.5, 1] } }
 };
 
-export default function Contact() {
+export default function Contact({ publicSettings = {} }) {
   const [formState, setFormState] = useState({ name: '', email: '', subject: '', message: '' });
   const [errors, setErrors] = useState({});
   const [submitState, setSubmitState] = useState('idle');
@@ -107,7 +107,7 @@ export default function Contact() {
     <section id="contact" style={{ padding: '8rem 0' }}>
       {showResume && (
         <CertificateModal
-          pdfUrl="/certificates/Nayan Dhurve Resume.pdf"
+          pdfUrl="/api/resume"
           title="Resume — Nayan Dhurve"
           onClose={() => setShowResume(false)}
         />
@@ -218,7 +218,7 @@ export default function Contact() {
             <form onSubmit={handleSubmit}>
               <div className="contact-form__eyebrow">Direct enquiry</div>
               <h3 className="contact-form__title">Tell me what you&apos;re building.</h3>
-              <p className="contact-form__intro">I typically reply within 24 hours.</p>
+              <p className="contact-form__intro">{publicSettings.responseTime || 'I typically reply within 24 hours.'}</p>
               <input className="contact-honeypot" name="company" tabIndex="-1" autoComplete="off" aria-hidden="true" />
               {/* Name */}
               <div style={{ position: 'relative', marginBottom: '1rem' }}>

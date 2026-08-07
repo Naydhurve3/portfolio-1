@@ -1,6 +1,6 @@
 import { CONTACT, mailtoUrl, whatsappUrl } from '../../config/contact';
 
-export default function Footer() {
+export default function Footer({ publicSettings = {} }) {
   return (
     <footer style={{
       padding: '6rem 0 3rem',
@@ -94,7 +94,7 @@ export default function Footer() {
                 boxShadow: '0 0 8px var(--success)',
                 display: 'inline-block'
               }} />
-              Systems Active · Available
+              {publicSettings.availability || 'Systems Active · Available'}
             </div>
           </div>
         </div>

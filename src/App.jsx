@@ -4,6 +4,7 @@ import Navbar from './components/layout/Navbar';
 import CustomCursor from './components/layout/CustomCursor';
 import ScrollProgress from './components/layout/ScrollProgress';
 import BackToTop from './components/layout/BackToTop';
+import QuickContact from './components/layout/QuickContact';
 import Hero from './components/sections/Hero';
 import About from './components/sections/About';
 import Skills from './components/sections/Skills';
@@ -55,6 +56,7 @@ function App() {
           </main>
 
           <Footer />
+          <QuickContact />
           <BackToTop />
         </>
       )}

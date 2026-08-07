@@ -26,6 +26,8 @@
   --danger: #ef4444;
   --success: #10b981;
   --purple: #a855f7;
+  --neon: #67e8f9;
+  --neon-glow: rgba(103, 232, 249, 0.3);
 
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-heading: 'Plus Jakarta Sans', sans-serif;
@@ -154,6 +156,17 @@ section {
                     linear-gradient(90deg, var(--border) 1px, transparent 1px);
   background-size: 80px 80px;
   opacity: 0.15;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(var(--accent-rgb), 0.09), transparent 30rem),
+    radial-gradient(circle at 88% 72%, rgba(52, 211, 153, 0.06), transparent 28rem);
 }
 
 /* ─── SCROLL PROGRESS BAR ─── */
@@ -483,6 +496,49 @@ section {
   border-color: var(--border-hover);
 }
 
+.contact-form__eyebrow {
+  color: var(--accent);
+  font: 700 0.68rem/1 var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.contact-form__title {
+  font-size: clamp(1.35rem, 2.5vw, 2rem);
+  margin-bottom: 0.55rem;
+}
+
+.contact-form__intro {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.contact-form__status {
+  min-height: 1.3rem;
+  margin-top: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.contact-honeypot {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.contact-channel:hover,
+.contact-channel:focus-visible {
+  border-color: var(--neon) !important;
+  box-shadow: 0 0 24px var(--neon-glow);
+  outline: none;
+}
+
 /* ─── SECTION HEADER ─── */
 .section-num {
   font-family: var(--font-mono);
@@ -552,6 +608,64 @@ section {
   color: #ffffff;
 }
 
+/* Persistent, accessible contact shortcut */
+.quick-contact {
+  position: fixed;
+  left: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.45rem 0.55rem 0.45rem 0.75rem;
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-full);
+  background: var(--navbar-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 24px var(--accent-glow);
+}
+
+.quick-contact__status {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent2);
+  box-shadow: 0 0 12px var(--accent2);
+}
+
+.quick-contact__label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.quick-contact__actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.quick-contact__actions a {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--text-secondary);
+  transition: transform 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.quick-contact__actions a:hover,
+.quick-contact__actions a:focus-visible {
+  color: var(--bg);
+  background: var(--neon);
+  box-shadow: 0 0 20px var(--neon-glow);
+  transform: translateY(-2px);
+  outline: none;
+}
+
 /* ─── RESPONSIVE ─── */
 @media (max-width: 768px) {
   .hamburger {
@@ -588,6 +702,25 @@ section {
 
   .glass-card {
     padding: 1.5rem;
+  }
+
+  .quick-contact {
+    left: 50%;
+    bottom: 0.75rem;
+    transform: translateX(-50%);
+  }
+
+  .quick-contact__label {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

@@ -1,3 +1,5 @@
+import { CONTACT, mailtoUrl, whatsappUrl } from '../../config/contact';
+
 export default function Footer() {
   return (
     <footer style={{
@@ -42,13 +44,19 @@ export default function Footer() {
               marginBottom: '0.75rem'
             }}>Connect</span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <a href="mailto:nayankdhurve@gmail.com" style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', transition: 'color 0.2s' }}>
+              <a href={mailtoUrl()} style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', transition: 'color 0.2s' }}>
                 Email
               </a>
-              <a href="https://github.com/Naydhurve3" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', transition: 'color 0.2s' }}>
+              <a href={`tel:${CONTACT.phoneE164}`} style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', transition: 'color 0.2s' }}>
+                Phone
+              </a>
+              <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', transition: 'color 0.2s' }}>
+                WhatsApp
+              </a>
+              <a href={CONTACT.github} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', transition: 'color 0.2s' }}>
                 GitHub
               </a>
-              <a href="https://www.linkedin.com/in/nayan-dhurve-31815a258" target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', transition: 'color 0.2s' }}>
+              <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', transition: 'color 0.2s' }}>
                 LinkedIn
               </a>
             </div>

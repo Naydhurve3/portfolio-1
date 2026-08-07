@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Mail, Phone, FileText } from 'lucide-react';
+import { Send, Mail, Phone, FileText, MessageCircle, ExternalLink, CheckCircle2 } from 'lucide-react';
 import CertificateModal from '../shared/CertificateModal';
+import { CONTACT, mailtoUrl, whatsappUrl } from '../../config/contact';
+import { submitContact } from '../../lib/submitContact';
 
 const GithubIcon = ({ size = 16 }) => (
   <svg
@@ -46,7 +48,7 @@ const fadeUp = {
 export default function Contact() {
   const [formState, setFormState] = useState({ name: '', email: '', subject: '', message: '' });
   const [errors, setErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
+  const [submitState, setSubmitState] = useState('idle');
   const [showResume, setShowResume] = useState(false);
 
   const validate = () => {
@@ -57,16 +59,21 @@ export default function Contact() {
     return errs;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const company = new FormData(e.currentTarget).get('company');
     const errs = validate();
     setErrors(errs);
-    if (Object.keys(errs).length === 0) {
-      setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
-        setFormState({ name: '', email: '', subject: '', message: '' });
-      }, 2500);
+    if (Object.keys(errs).length !== 0) return;
+
+    setSubmitState('sending');
+    try {
+      await submitContact({ ...formState, company });
+      setSubmitState('success');
+      setFormState({ name: '', email: '', subject: '', message: '' });
+    } catch {
+      setSubmitState('fallback');
+      window.location.href = mailtoUrl(formState);
     }
   };
 
@@ -140,7 +147,7 @@ export default function Contact() {
 
             {/* Contact Info Cards */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
-              <a href="mailto:nayankdhurve@gmail.com" style={{
+              <a href={mailtoUrl()} className="contact-channel" style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '1rem',
@@ -156,11 +163,12 @@ export default function Contact() {
                 <Mail size={20} style={{ color: 'var(--accent)' }} />
                 <div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Email</div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>nayankdhurve@gmail.com</div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{CONTACT.email}</div>
                 </div>
+                <ExternalLink size={15} style={{ marginLeft: 'auto', color: 'var(--text-muted)' }} />
               </a>
 
-              <a href="tel:+918788577239" style={{
+              <a href={`tel:${CONTACT.phoneE164}`} className="contact-channel" style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '1rem',
@@ -176,18 +184,22 @@ export default function Contact() {
                 <Phone size={20} style={{ color: 'var(--accent)' }} />
                 <div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>Phone</div>
-                  <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>+91-8788577239</div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{CONTACT.phoneDisplay}</div>
                 </div>
+                <ExternalLink size={15} style={{ marginLeft: 'auto', color: 'var(--text-muted)' }} />
               </a>
             </div>
 
             {/* Social Links */}
             <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <a href="https://github.com/Naydhurve3" target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <a href={CONTACT.github} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 <GithubIcon size={16} /> GitHub
               </a>
-              <a href="https://www.linkedin.com/in/nayan-dhurve-31815a258" target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 <LinkedinIcon size={16} /> LinkedIn
+              </a>
+              <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <MessageCircle size={16} /> WhatsApp
               </a>
               <button onClick={() => setShowResume(true)} className="btn btn-accent btn-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
                 <FileText size={16} /> Resume
@@ -204,11 +216,18 @@ export default function Contact() {
             className="glass-card"
           >
             <form onSubmit={handleSubmit}>
+              <div className="contact-form__eyebrow">Direct enquiry</div>
+              <h3 className="contact-form__title">Tell me what you&apos;re building.</h3>
+              <p className="contact-form__intro">I typically reply within 24 hours.</p>
+              <input className="contact-honeypot" name="company" tabIndex="-1" autoComplete="off" aria-hidden="true" />
               {/* Name */}
               <div style={{ position: 'relative', marginBottom: '1rem' }}>
                 <label style={labelStyle}>Name *</label>
                 <input
                   type="text"
+                  name="name"
+                  autoComplete="name"
+                  aria-label="Name"
                   value={formState.name}
                   onChange={e => setFormState(s => ({ ...s, name: e.target.value }))}
                   style={{ ...inputStyle, borderColor: errors.name ? 'var(--danger)' : undefined }}
@@ -223,6 +242,9 @@ export default function Contact() {
                 <label style={labelStyle}>Email *</label>
                 <input
                   type="email"
+                  name="email"
+                  autoComplete="email"
+                  aria-label="Email"
                   value={formState.email}
                   onChange={e => setFormState(s => ({ ...s, email: e.target.value }))}
                   style={{ ...inputStyle, borderColor: errors.email ? 'var(--danger)' : undefined }}
@@ -237,6 +259,8 @@ export default function Contact() {
                 <label style={labelStyle}>Subject</label>
                 <input
                   type="text"
+                  name="subject"
+                  aria-label="Subject"
                   value={formState.subject}
                   onChange={e => setFormState(s => ({ ...s, subject: e.target.value }))}
                   style={inputStyle}
@@ -250,6 +274,8 @@ export default function Contact() {
                 <label style={labelStyle}>Message *</label>
                 <textarea
                   value={formState.message}
+                  name="message"
+                  aria-label="Message"
                   onChange={e => setFormState(s => ({ ...s, message: e.target.value }))}
                   style={{ ...inputStyle, minHeight: '120px', resize: 'vertical', borderColor: errors.message ? 'var(--danger)' : undefined }}
                   onFocus={e => e.target.style.borderColor = 'var(--accent)'}
@@ -260,9 +286,9 @@ export default function Contact() {
 
               <button
                 type="submit"
-                className={`btn ${submitted ? '' : 'btn-primary'}`}
-                disabled={submitted}
-                style={submitted ? {
+                className={`btn ${submitState === 'success' ? '' : 'btn-primary'}`}
+                disabled={submitState === 'sending' || submitState === 'success'}
+                style={submitState === 'success' ? {
                   background: 'var(--success)',
                   color: '#ffffff',
                   border: '1px solid var(--success)',
@@ -270,8 +296,14 @@ export default function Contact() {
                   justifyContent: 'center'
                 } : { width: '100%', justifyContent: 'center' }}
               >
-                {submitted ? '✓ Sent!' : <><Send size={14} /> Send message</>}
+                {submitState === 'sending' && 'Sending…'}
+                {submitState === 'success' && <><CheckCircle2 size={15} /> Message received</>}
+                {(submitState === 'idle' || submitState === 'fallback') && <><Send size={14} /> Send message</>}
               </button>
+              <div className="contact-form__status" role="status" aria-live="polite">
+                {submitState === 'success' && 'Thanks — your enquiry was saved securely.'}
+                {submitState === 'fallback' && 'Opening your email app so your message still reaches me.'}
+              </div>
             </form>
           </motion.div>
         </div>

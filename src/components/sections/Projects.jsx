@@ -1,12 +1,62 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { projects, secondaryProjects } from '../../data/projects';
-import { ExternalLink } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ExternalLink, GitBranch, ShieldCheck } from 'lucide-react';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 25 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.25, 1, 0.5, 1] } }
 };
+
+function WorkflowDiagram({ project }) {
+  return (
+    <div className="workflow-diagram" aria-label={`${project.title} workflow`}>
+      <div className="workflow-diagram__header">
+        <div>
+          <span>System workflow</span>
+          <strong>{project.id.replace('-', ' / ')}</strong>
+        </div>
+        <GitBranch size={18} aria-hidden="true" />
+      </div>
+      <div className="workflow-diagram__track">
+        {project.workflow.map((step, index) => (
+          <div className="workflow-diagram__stage" key={step.label}>
+            <div className="workflow-diagram__node" style={{ '--project-color': project.color }}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <strong>{step.label}</strong>
+              <small>{step.detail}</small>
+            </div>
+            {index < project.workflow.length - 1 && (
+              <div className="workflow-diagram__arrow" aria-hidden="true">
+                <ArrowRight size={16} />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="workflow-diagram__decision">
+        <ShieldCheck size={16} aria-hidden="true" />
+        <span><strong>Architecture decision</strong>{project.decision}</span>
+      </div>
+    </div>
+  );
+}
+
+function EvidenceGrid({ project }) {
+  return (
+    <div className="project-evidence" aria-label="Repository-backed evidence">
+      <div className="project-evidence__title">
+        <span>Repository evidence</span>
+        <small>{project.sourceLabel}</small>
+      </div>
+      <div className="project-evidence__grid">
+        {project.evidence.map(item => (
+          <span key={item}><CheckCircle2 size={13} aria-hidden="true" />{item}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function CaseStudyAccordion({ caseStudy }) {
   const [activeTab, setActiveTab] = useState(0);
@@ -79,6 +129,7 @@ function ProjectSection({ project, index }) {
         alignItems: 'center'
       }}>
         <motion.div
+          className="project-workflow-card"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
@@ -110,7 +161,7 @@ function ProjectSection({ project, index }) {
             transformStyle: 'preserve-3d'
           }}
         >
-          <ProjectDiagram project={project} />
+          <WorkflowDiagram project={project} />
         </motion.div>
 
         <motion.div
@@ -132,6 +183,11 @@ function ProjectSection({ project, index }) {
             color: 'var(--accent)',
             marginBottom: '0.5rem'
           }}>{project.tag}</span>
+
+          <div className="project-meta">
+            <span>{project.year}</span>
+            <span className="project-meta__status">{project.status}</span>
+          </div>
 
           <h3 style={{
             fontSize: 'clamp(1.6rem, 3.5vw, 2.3rem)',
@@ -172,6 +228,8 @@ function ProjectSection({ project, index }) {
 
           <CaseStudyAccordion caseStudy={project.caseStudy} />
 
+          <EvidenceGrid project={project} />
+
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -197,7 +255,7 @@ function ProjectSection({ project, index }) {
             </a>
             {project.live && (
               <a href={project.live} target="_blank" rel="noopener noreferrer" className="btn btn-accent">
-                <ExternalLink size={14} /> Live Demo
+                <ExternalLink size={14} /> {project.liveLabel || 'Live Demo'}
               </a>
             )}
           </div>

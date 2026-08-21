@@ -36,7 +36,8 @@ function PublicApp() {
   const channels = { email: true, phone: true, whatsapp: true, github: true, linkedin: true, ...(publicSettings.channels || {}) };
   const hiddenProjects = Array.isArray(publicSettings.hiddenProjects) ? new Set(publicSettings.hiddenProjects) : new Set();
   const resumeVisible = publicSettings.resumeVisible !== false;
-  const visibility = { sections, channels, hiddenProjects, resumeVisible };
+  const contentItems = Array.isArray(publicSettings.contentItems) ? publicSettings.contentItems : [];
+  const visibility = { sections, channels, hiddenProjects, resumeVisible, contentItems };
 
   const toggleTheme = useCallback(() => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');

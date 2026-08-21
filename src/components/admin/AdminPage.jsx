@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
-  Activity, CheckCircle2, Eye, FileClock, FileText, FileUp, KeyRound, LayoutGrid, Lock, LogOut,
+  Activity, Award, CheckCircle2, Eye, FileClock, FileText, FileUp, KeyRound, LayoutGrid, Link, Lock, LogOut,
   Mail, MessageSquare, Save, ShieldCheck, SlidersHorizontal, Users, ExternalLink,
-  ArrowLeft, RefreshCcw, Send, Sparkles
+  ArrowLeft, ChevronDown, ChevronUp, Pencil, Plus, RefreshCcw, Send, Sparkles, Trash2
 } from 'lucide-react';
 import { projects as featuredProjects, secondaryProjects } from '../../data/projects';
 
@@ -21,11 +21,13 @@ const DEFAULT_SETTINGS = {
   channels: { email: true, phone: true, whatsapp: true, github: true, linkedin: true },
   hiddenProjects: [],
   resumeVisible: true,
+  contentItems: [],
 };
 
 const TABS = [
   { id: 'overview', label: 'Overview', icon: Activity },
   { id: 'resume', label: 'Resume manager', icon: FileClock },
+  { id: 'content', label: 'Content studio', icon: Plus },
   { id: 'visibility', label: 'What visitors see', icon: Eye },
   { id: 'projects', label: 'Project visibility', icon: LayoutGrid },
   { id: 'settings', label: 'Site text & status', icon: SlidersHorizontal },
@@ -35,6 +37,14 @@ const TABS = [
 
 const SECTION_LABELS = { about: 'About', skills: 'Skills', projects: 'Projects', experience: 'Journey' };
 const CHANNEL_LABELS = { email: 'Email', phone: 'Phone', whatsapp: 'WhatsApp', github: 'GitHub', linkedin: 'LinkedIn' };
+const CONTENT_TYPES = [
+  ['project', 'Project'], ['certificate', 'Certificate'], ['experience', 'Experience'],
+  ['achievement', 'Achievement'], ['publication', 'Publication'], ['custom', 'Custom item'],
+];
+const EMPTY_CONTENT = {
+  type: 'project', title: '', subtitle: '', date: '', description: '', tags: '',
+  primaryUrl: '', documentUrl: '', imageUrl: '', metricValue: '', metricLabel: '', visible: true, featured: false,
+};
 
 function Switch({ checked, onChange, label }) {
   return (
@@ -64,6 +74,8 @@ export default function AdminPage() {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [contentDraft, setContentDraft] = useState(EMPTY_CONTENT);
+  const [editingContentId, setEditingContentId] = useState(null);
 
   const loadDashboard = useCallback(async () => {
     const [resumeData, settingsData, contactData] = await Promise.all([
@@ -156,6 +168,73 @@ export default function AdminPage() {
         ? current.hiddenProjects.filter(pid => pid !== id)
         : [...current.hiddenProjects, id],
     }));
+  };
+
+  const resetContentDraft = () => {
+    setContentDraft(EMPTY_CONTENT);
+    setEditingContentId(null);
+  };
+
+  const editContentItem = item => {
+    setEditingContentId(item.id);
+    setContentDraft({ ...EMPTY_CONTENT, ...item, tags: (item.tags || []).join(', ') });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const saveContentItem = async event => {
+    event.preventDefault();
+    const item = {
+      ...contentDraft,
+      id: editingContentId || `content-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
+      title: contentDraft.title.trim(),
+      tags: contentDraft.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+    };
+    const items = editingContentId
+      ? settings.contentItems.map(current => current.id === editingContentId ? item : current)
+      : [item, ...settings.contentItems];
+    const next = { ...settings, contentItems: items };
+    setSettings(next);
+    setBusy(true); setError(''); setNotice('');
+    try {
+      await request('/api/admin/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contentItems: items }) });
+      setNotice(editingContentId ? 'Content updated on the live portfolio.' : 'New content published to the live portfolio.');
+      resetContentDraft();
+    } catch (err) { setSettings(settings); setError(err.message); }
+    finally { setBusy(false); }
+  };
+
+  const updateContentItems = async (items, message) => {
+    const previous = settings.contentItems;
+    setSettings(current => ({ ...current, contentItems: items }));
+    setBusy(true); setError(''); setNotice('');
+    try {
+      await request('/api/admin/settings', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contentItems: items }) });
+      setNotice(message);
+    } catch (err) {
+      setSettings(current => ({ ...current, contentItems: previous }));
+      setError(err.message);
+    } finally { setBusy(false); }
+  };
+
+  const deleteContentItem = item => {
+    if (!window.confirm(`Remove “${item.title}” from the content studio?`)) return;
+    updateContentItems(settings.contentItems.filter(current => current.id !== item.id), 'Content item removed.');
+    if (editingContentId === item.id) resetContentDraft();
+  };
+
+  const moveContentItem = (index, direction) => {
+    const target = index + direction;
+    if (target < 0 || target >= settings.contentItems.length) return;
+    const items = [...settings.contentItems];
+    [items[index], items[target]] = [items[target], items[index]];
+    updateContentItems(items, 'Display order updated.');
+  };
+
+  const toggleContentVisibility = item => {
+    updateContentItems(
+      settings.contentItems.map(current => current.id === item.id ? { ...current, visible: current.visible === false } : current),
+      item.visible === false ? 'Content is now visible.' : 'Content hidden from the public portfolio.',
+    );
   };
 
   const changePassword = async event => {
@@ -366,6 +445,89 @@ export default function AdminPage() {
                 </div>
               </section>
             </>
+          )}
+
+          {tab === 'content' && (
+            <section className="admin-content-studio">
+              <form className="admin-panel admin-content-editor" onSubmit={saveContentItem}>
+                <div className="admin-panel__head">
+                  <div><span>{editingContentId ? 'Editing item' : 'Create content'}</span><h2>{editingContentId ? 'Update portfolio entry' : 'Add anything to your portfolio'}</h2></div>
+                  <Plus />
+                </div>
+                <div className="admin-panel__body admin-form">
+                  <div className="admin-form-grid">
+                    <label className="admin-field">Content type
+                      <select value={contentDraft.type} onChange={e => setContentDraft(d => ({ ...d, type: e.target.value }))}>
+                        {CONTENT_TYPES.map(([value, label]) => <option value={value} key={value}>{label}</option>)}
+                      </select>
+                    </label>
+                    <label className="admin-field">Title *
+                      <input value={contentDraft.title} onChange={e => setContentDraft(d => ({ ...d, title: e.target.value }))} placeholder="Project, certificate or achievement title" maxLength={160} required />
+                    </label>
+                    <label className="admin-field">Organisation / subtitle
+                      <input value={contentDraft.subtitle} onChange={e => setContentDraft(d => ({ ...d, subtitle: e.target.value }))} placeholder="Issuer, role, institution or category" maxLength={160} />
+                    </label>
+                    <label className="admin-field">Date / year
+                      <input value={contentDraft.date} onChange={e => setContentDraft(d => ({ ...d, date: e.target.value }))} placeholder="Aug 2026" maxLength={60} />
+                    </label>
+                  </div>
+                  <label className="admin-field">Description *
+                    <textarea value={contentDraft.description} onChange={e => setContentDraft(d => ({ ...d, description: e.target.value }))} placeholder="Explain what it is, what you did, and why it matters." rows={5} maxLength={3000} required />
+                  </label>
+                  <label className="admin-field">Tags / skills
+                    <input value={contentDraft.tags} onChange={e => setContentDraft(d => ({ ...d, tags: e.target.value }))} placeholder="Python, Machine Learning, Research (comma separated)" />
+                  </label>
+                  <div className="admin-form-grid">
+                    <label className="admin-field"><span><Link size={12} /> Main link</span>
+                      <input type="url" value={contentDraft.primaryUrl} onChange={e => setContentDraft(d => ({ ...d, primaryUrl: e.target.value }))} placeholder="https://github.com/... or live demo" />
+                    </label>
+                    <label className="admin-field"><span><FileText size={12} /> PDF / document link</span>
+                      <input value={contentDraft.documentUrl} onChange={e => setContentDraft(d => ({ ...d, documentUrl: e.target.value }))} placeholder="https://.../certificate.pdf or /certificates/file.pdf" />
+                    </label>
+                    <label className="admin-field">Image link
+                      <input value={contentDraft.imageUrl} onChange={e => setContentDraft(d => ({ ...d, imageUrl: e.target.value }))} placeholder="https://.../preview.jpg or /image.jpg" />
+                    </label>
+                    <label className="admin-field">Metric / result
+                      <div className="admin-inline-fields"><input value={contentDraft.metricValue} onChange={e => setContentDraft(d => ({ ...d, metricValue: e.target.value }))} placeholder="94 tests" /><input value={contentDraft.metricLabel} onChange={e => setContentDraft(d => ({ ...d, metricLabel: e.target.value }))} placeholder="What this number means" /></div>
+                    </label>
+                  </div>
+                  <div className="admin-content-options">
+                    <Switch checked={contentDraft.visible} onChange={e => setContentDraft(d => ({ ...d, visible: e.target.checked }))} label="Show on public portfolio" />
+                    <Switch checked={contentDraft.featured} onChange={e => setContentDraft(d => ({ ...d, featured: e.target.checked }))} label="Feature this item" />
+                  </div>
+                  <div className="admin-panel__actions admin-editor-actions">
+                    {editingContentId && <button type="button" className="btn btn-secondary" onClick={resetContentDraft}>Cancel editing</button>}
+                    <button className="btn btn-primary" disabled={busy}><Save size={14} /> {busy ? 'Publishing…' : editingContentId ? 'Save changes' : 'Publish item'}</button>
+                  </div>
+                </div>
+              </form>
+
+              <section className="admin-panel admin-content-library">
+                <div className="admin-panel__head"><div><span>Content library</span><h2>Manage display and order</h2></div><Award /></div>
+                <div className="admin-panel__body">
+                  {settings.contentItems.length === 0 && <div className="admin-empty-state"><Plus size={22} /><strong>No custom content yet</strong><p>Add a project, certificate, experience, publication, achievement, or any custom item using the form.</p></div>}
+                  <div className="admin-content-items">
+                    {settings.contentItems.map((item, index) => (
+                      <article className={`admin-content-item ${item.visible === false ? 'is-hidden' : ''}`} key={item.id}>
+                        {item.imageUrl && <img src={item.imageUrl} alt="" />}
+                        <div className="admin-content-item__copy">
+                          <div><span>{item.type}</span>{item.featured && <b>Featured</b>}{item.visible === false && <b>Hidden</b>}</div>
+                          <strong>{item.title}</strong>
+                          <small>{[item.subtitle, item.date].filter(Boolean).join(' · ') || 'No supporting details'}</small>
+                        </div>
+                        <div className="admin-content-item__actions">
+                          <button type="button" onClick={() => moveContentItem(index, -1)} disabled={busy || index === 0} aria-label={`Move ${item.title} up`}><ChevronUp /></button>
+                          <button type="button" onClick={() => moveContentItem(index, 1)} disabled={busy || index === settings.contentItems.length - 1} aria-label={`Move ${item.title} down`}><ChevronDown /></button>
+                          <button type="button" onClick={() => toggleContentVisibility(item)} disabled={busy} aria-label={`${item.visible === false ? 'Show' : 'Hide'} ${item.title}`}><Eye /></button>
+                          <button type="button" onClick={() => editContentItem(item)} disabled={busy} aria-label={`Edit ${item.title}`}><Pencil /></button>
+                          <button type="button" className="is-danger" onClick={() => deleteContentItem(item)} disabled={busy} aria-label={`Delete ${item.title}`}><Trash2 /></button>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            </section>
           )}
 
           {tab === 'visibility' && (

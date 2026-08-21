@@ -47,10 +47,28 @@ export default function PortfolioExperience({ theme, toggleTheme, visibility }) 
   const [active, setActive] = useState('top');
   const [projectOpen, setProjectOpen] = useState(null);
   const [loopStep, setLoopStep] = useState(0);
-  const visibleProjects = useMemo(
-    () => projects.filter((project) => !visibility.hiddenProjects.has(project.id)),
-    [visibility.hiddenProjects],
+  const customContent = useMemo(
+    () => (visibility.contentItems || []).filter(item => item.visible !== false),
+    [visibility.contentItems],
   );
+  const customProjects = useMemo(() => customContent.filter(item => item.type === 'project').map((item, index) => ({
+    ...item,
+    tag: item.subtitle || 'CUSTOM PROJECT',
+    status: item.featured ? 'Featured' : item.date || 'Published',
+    chips: item.tags || [],
+    github: item.primaryUrl,
+    live: item.documentUrl,
+    color: ['#d7ff43', '#67e8f9', '#a855f7', '#f59e0b'][index % 4],
+    metricValue: item.metricValue || item.date || 'New',
+    metricLabel: item.metricLabel || 'Added from the content studio',
+    caseStudy: { problem: item.description, solution: item.description, results: item.metricLabel || 'Published from the private content studio.' },
+    evidence: item.tags || [],
+  })), [customContent]);
+  const visibleProjects = useMemo(
+    () => [...customProjects, ...projects.filter((project) => !visibility.hiddenProjects.has(project.id))],
+    [customProjects, visibility.hiddenProjects],
+  );
+  const libraryContent = useMemo(() => customContent.filter(item => item.type !== 'project'), [customContent]);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -217,6 +235,28 @@ export default function PortfolioExperience({ theme, toggleTheme, visibility }) 
                   <span className="neo-year">{item.year}</span>
                   <i />
                   <div><small>{item.subtitle}</small><h3>{item.title}</h3><p>{item.description}</p>{item.certificateUrl && <a href={item.certificateUrl} target="_blank" rel="noreferrer">View certificate <ExternalLink /></a>}</div>
+                </motion.article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {libraryContent.length > 0 && (
+          <section className="neo-section neo-library" id="updates">
+            <SectionIntro index="04" eyebrow="Live content library" title="Credentials, milestones and work added from the private studio." copy="This collection updates directly from the portfolio control room—no code change or redeployment required." />
+            <div className="neo-library-grid">
+              {libraryContent.map((item, index) => (
+                <motion.article className={`neo-library-card ${item.featured ? 'is-featured' : ''}`} key={item.id} {...fade}>
+                  {item.imageUrl && <div className="neo-library-card__image"><img src={item.imageUrl} alt="" loading="lazy" /></div>}
+                  <header><span>{String(index + 1).padStart(2, '0')} / {item.type}</span>{item.featured && <b>Featured</b>}</header>
+                  <small>{[item.subtitle, item.date].filter(Boolean).join(' · ')}</small>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                  {item.tags?.length > 0 && <div className="neo-chips">{item.tags.map(tag => <span key={tag}>{tag}</span>)}</div>}
+                  {(item.primaryUrl || item.documentUrl) && <footer>
+                    {item.primaryUrl && <a href={item.primaryUrl} target="_blank" rel="noreferrer">Open link <ArrowUpRight /></a>}
+                    {item.documentUrl && <a href={item.documentUrl} target="_blank" rel="noreferrer"><Download /> View document</a>}
+                  </footer>}
                 </motion.article>
               ))}
             </div>

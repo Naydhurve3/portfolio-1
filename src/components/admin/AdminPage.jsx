@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
-  Eye, FileClock, FileText, FileUp, KeyRound, LayoutGrid, Lock, LogOut,
+  Activity, CheckCircle2, Eye, FileClock, FileText, FileUp, KeyRound, LayoutGrid, Lock, LogOut,
   Mail, MessageSquare, Save, ShieldCheck, SlidersHorizontal, Users, ExternalLink,
-  ArrowLeft, RefreshCcw
+  ArrowLeft, RefreshCcw, Send, Sparkles
 } from 'lucide-react';
 import { projects as featuredProjects, secondaryProjects } from '../../data/projects';
 
@@ -24,6 +24,7 @@ const DEFAULT_SETTINGS = {
 };
 
 const TABS = [
+  { id: 'overview', label: 'Overview', icon: Activity },
   { id: 'resume', label: 'Resume manager', icon: FileClock },
   { id: 'visibility', label: 'What visitors see', icon: Eye },
   { id: 'projects', label: 'Project visibility', icon: LayoutGrid },
@@ -56,7 +57,7 @@ export default function AdminPage() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
-  const [tab, setTab] = useState('resume');
+  const [tab, setTab] = useState('overview');
   const [versions, setVersions] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
@@ -184,8 +185,10 @@ export default function AdminPage() {
   };
 
   const activeVersion = versions.find(version => version.is_active);
+  const visibleProjectCount = [...featuredProjects, ...secondaryProjects]
+    .filter(project => !settings.hiddenProjects.includes(project.id)).length;
 
-  if (checking) return <main className="admin-shell admin-shell--center">Checking secure session…</main>;
+  if (checking) return <main className="admin-shell admin-shell--center"><div className="admin-loader"><span /><strong>Opening control room</strong><small>Verifying secure session</small></div></main>;
   if (!authenticated && recoveryMode) return (
     <main className="admin-shell admin-shell--center">
       <form className="admin-login admin-login--recovery" onSubmit={recoverPassword}>
@@ -229,10 +232,11 @@ export default function AdminPage() {
 
   return (
     <main className="admin-shell admin-shell--app">
+      <div className="admin-ambient" aria-hidden="true"><i /><i /><i /></div>
       <aside className="admin-sidebar">
         <div className="admin-sidebar__brand">
-          N.<span>DHURVE</span>
-          <small>Control room</small>
+          <strong>ND<span>®</span></strong>
+          <small>Private studio</small>
         </div>
         <nav className="admin-sidebar__nav" aria-label="Admin sections">
           {TABS.map(({ id, label, icon: Icon }) => (
@@ -256,16 +260,67 @@ export default function AdminPage() {
       <div className="admin-main">
         <header className="admin-topbar">
           <div>
-            <span className="admin-topbar__eyebrow">Private control room</span>
+            <span className="admin-topbar__eyebrow">Secure workspace / 2026</span>
             <h1>{TABS.find(t => t.id === tab)?.label}</h1>
           </div>
-          <span className="admin-status-pill"><span /> Live · applies instantly</span>
+          <div className="admin-topbar__actions">
+            <a className="admin-preview-link" href="/" target="_blank" rel="noopener noreferrer"><ExternalLink size={13} /> Preview site</a>
+            <span className="admin-status-pill"><span /> Live system</span>
+          </div>
         </header>
 
         {error && <div className="admin-error" role="alert">{error}</div>}
         {notice && <div className="admin-notice" role="status">{notice}</div>}
 
         <div className="admin-content">
+          {tab === 'overview' && (
+            <>
+              <section className="admin-welcome">
+                <div>
+                  <span className="admin-list-label">Portfolio command center</span>
+                  <h2>Your public presence,<br /><em>under control.</em></h2>
+                  <p>Publish a resume, tune what visitors see, and respond to new opportunities without touching the codebase.</p>
+                </div>
+                <div className="admin-welcome__orb" aria-hidden="true"><i /><i /><strong>ND</strong></div>
+              </section>
+
+              <section className="admin-metrics" aria-label="Portfolio status summary">
+                <button type="button" onClick={() => setTab('resume')}>
+                  <small>01 / Resume</small><strong>{activeVersion ? 'Live' : 'Fallback'}</strong><span>{versions.length} managed version{versions.length === 1 ? '' : 's'}</span>
+                </button>
+                <button type="button" onClick={() => setTab('inbox')}>
+                  <small>02 / Enquiries</small><strong>{contacts.length}</strong><span>Saved contact message{contacts.length === 1 ? '' : 's'}</span>
+                </button>
+                <button type="button" onClick={() => setTab('projects')}>
+                  <small>03 / Projects</small><strong>{visibleProjectCount}</strong><span>Currently visible</span>
+                </button>
+                <button type="button" onClick={() => setTab('visibility')}>
+                  <small>04 / Channels</small><strong>{Object.values(settings.channels).filter(Boolean).length}</strong><span>Direct contact routes live</span>
+                </button>
+              </section>
+
+              <section className="admin-overview-grid">
+                <div className="admin-panel admin-panel--spotlight">
+                  <div className="admin-panel__head"><div><span>Quick actions</span><h2>Common updates</h2></div><Sparkles /></div>
+                  <div className="admin-action-list">
+                    <button type="button" onClick={() => setTab('resume')}><FileUp size={18} /><span><strong>Publish a new resume</strong><small>Upload and activate a PDF instantly</small></span><ArrowLeft size={15} /></button>
+                    <button type="button" onClick={() => setTab('settings')}><SlidersHorizontal size={18} /><span><strong>Update availability</strong><small>Change public status and response time</small></span><ArrowLeft size={15} /></button>
+                    <button type="button" onClick={() => setTab('inbox')}><Send size={18} /><span><strong>Review enquiries</strong><small>Open your private contact inbox</small></span><ArrowLeft size={15} /></button>
+                  </div>
+                </div>
+
+                <div className="admin-panel admin-health">
+                  <div className="admin-panel__head"><div><span>System health</span><h2>Everything connected</h2></div><Activity /></div>
+                  <div className="admin-panel__body">
+                    <div><CheckCircle2 size={16} /><span><strong>Secure session</strong><small>Server verified</small></span></div>
+                    <div><CheckCircle2 size={16} /><span><strong>Content database</strong><small>Neon connected</small></span></div>
+                    <div><CheckCircle2 size={16} /><span><strong>Public controls</strong><small>Changes apply instantly</small></span></div>
+                  </div>
+                </div>
+              </section>
+            </>
+          )}
+
           {tab === 'resume' && (
             <>
               <section className="admin-panel">

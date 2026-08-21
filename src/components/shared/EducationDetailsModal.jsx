@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MapPin, Globe, Calendar } from 'lucide-react';
+import { useModalFocus } from './useModalFocus';
 
 export default function EducationDetailsModal({ edu, onClose }) {
   const overlayRef = useRef(null);
+  useModalFocus(overlayRef);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -40,53 +42,26 @@ export default function EducationDetailsModal({ edu, onClose }) {
         }}
       >
         <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-label={edu.degree}
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
           transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
-          style={{
-            width: '100%',
-            maxWidth: '500px',
-            background: '#0a0a0c',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-xl)',
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-            boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
-          }}
+          className="modal-panel"
+          style={{ maxWidth: '500px', maxHeight: '85vh' }}
         >
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '1rem 1.5rem',
-            borderBottom: '1px solid #1c1c24',
-            background: '#111116',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <span style={{ fontSize: '1.2rem' }}>🎓</span>
-              <span style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                color: '#fff',
-              }}>{edu.degree}</span>
+          <div className="modal-header">
+            <div className="modal-header__title">
+              <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>🎓</span>
+              <span>{edu.degree}</span>
             </div>
-            <button
-              onClick={onClose}
-              style={{
-                width: '32px', height: '32px', borderRadius: '6px',
-                border: '1px solid #27272a', background: 'transparent',
-                color: '#a1a1aa', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#ef4444'; e.currentTarget.style.color = '#ef4444'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#27272a'; e.currentTarget.style.color = '#a1a1aa'; }}
-            >
-              <X size={16} />
-            </button>
+            <div className="modal-header__actions">
+              <button onClick={onClose} className="modal-close" aria-label="Close">
+                <X size={16} />
+              </button>
+            </div>
           </div>
 
           <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>

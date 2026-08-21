@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://transcendent-frangollo-953e9a.netlify.app/sitemap.xml

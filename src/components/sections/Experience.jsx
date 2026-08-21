@@ -55,13 +55,13 @@ export default function Experience() {
               transition={{ duration: 0.6, delay: i * 0.1, ease: [0.25, 1, 0.5, 1] }}
               style={{
                 position: 'relative',
-                marginBottom: i < experience.length - 1 ? '4rem' : 0
+                marginBottom: i < experience.length - 1 ? '2rem' : 0
               }}
             >
               <div style={{
                 position: 'absolute',
                 left: 'calc(-2rem - 3.5px)',
-                top: '6px',
+                top: '1.9rem',
                 width: '8px',
                 height: '8px',
                 borderRadius: '50%',
@@ -69,57 +69,44 @@ export default function Experience() {
                 boxShadow: '0 0 10px var(--accent)'
               }} />
 
-              <div style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.9rem',
-                fontWeight: 700,
-                color: 'var(--accent)',
-                marginBottom: '0.5rem'
-              }}>{item.year}</div>
+              <div className="timeline-entry">
+                <div style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.9rem',
+                  fontWeight: 700,
+                  color: 'var(--accent)',
+                  marginBottom: '0.5rem'
+                }}>{item.year}</div>
 
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: 700,
-                marginBottom: '0.25rem',
-                fontFamily: 'var(--font-heading)'
-              }}>{item.title}</h3>
+                <h3 style={{
+                  fontSize: '1.25rem',
+                  fontWeight: 700,
+                  marginBottom: '0.25rem',
+                  fontFamily: 'var(--font-heading)'
+                }}>{item.title}</h3>
 
-              <div style={{
-                fontSize: '0.88rem',
-                color: 'var(--text-muted)',
-                marginBottom: '1rem'
-              }}>{item.subtitle}</div>
+                <div style={{
+                  fontSize: '0.88rem',
+                  color: 'var(--text-muted)',
+                  marginBottom: '1rem'
+                }}>{item.subtitle}</div>
 
-              <p style={{
-                color: 'var(--text-secondary)',
-                fontSize: '0.9rem',
-                lineHeight: 1.7
-              }}>{item.description}</p>
+                <p style={{
+                  color: 'var(--text-secondary)',
+                  fontSize: '0.9rem',
+                  lineHeight: 1.7
+                }}>{item.description}</p>
 
-              {item.certificateUrl && (
-                <button
-                  onClick={() => { setModalUrl(item.certificateUrl); setModalTitle(item.title); }}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    marginTop: '1rem',
-                    padding: '0.4rem 0.85rem',
-                    borderRadius: '6px',
-                    border: '1px solid var(--border)',
-                    background: 'transparent',
-                    color: 'var(--accent)',
-                    fontSize: '0.75rem',
-                    fontFamily: 'var(--font-mono)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-glow)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'transparent'; }}
-                >
-                  <FileText size={13} /> View Completion Certificate
-                </button>
-              )}
+                {item.certificateUrl && (
+                  <button
+                    onClick={() => { setModalUrl(item.certificateUrl); setModalTitle(item.title); }}
+                    className="btn btn-secondary btn-sm"
+                    style={{ marginTop: '1rem', cursor: 'pointer' }}
+                  >
+                    <FileText size={14} /> View Completion Certificate
+                  </button>
+                )}
+              </div>
             </motion.div>
           ))}
         </div>

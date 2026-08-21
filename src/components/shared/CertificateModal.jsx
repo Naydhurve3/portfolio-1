@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, FileText } from 'lucide-react';
+import { useModalFocus } from './useModalFocus';
 
 export default function CertificateModal({ pdfUrl, title, onClose }) {
   const viewerUrl = pdfUrl.includes('?') ? `${pdfUrl}&toolbar=0` : `${pdfUrl}#toolbar=0`;
   const overlayRef = useRef(null);
+  useModalFocus(overlayRef);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -41,88 +43,31 @@ export default function CertificateModal({ pdfUrl, title, onClose }) {
         }}
       >
         <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-label={title}
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
           transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
-          style={{
-            width: '100%',
-            maxWidth: '900px',
-            height: '85vh',
-            background: '#0a0a0c',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-xl)',
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-            boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
-          }}
+          className="modal-panel modal-panel--wide"
         >
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '1rem 1.5rem',
-            borderBottom: '1px solid #1c1c24',
-            background: '#111116',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <FileText size={18} color="var(--accent)" />
-              <span style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                color: '#fff',
-              }}>{title}</span>
+          <div className="modal-header">
+            <div className="modal-header__title">
+              <FileText size={18} color="var(--accent)" style={{ flexShrink: 0 }} />
+              <span>{title}</span>
             </div>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <a
-                href={pdfUrl}
-                download
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.35rem',
-                  padding: '0.4rem 0.85rem',
-                  borderRadius: '6px',
-                  border: '1px solid #27272a',
-                  background: 'transparent',
-                  color: '#a1a1aa',
-                  fontSize: '0.75rem',
-                  fontFamily: 'var(--font-mono)',
-                  cursor: 'pointer',
-                  textDecoration: 'none',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.color = '#fff'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = '#27272a'; e.currentTarget.style.color = '#a1a1aa'; }}
-              >
+            <div className="modal-header__actions">
+              <a href={pdfUrl} download className="btn btn-secondary btn-sm">
                 <ExternalLink size={12} /> Download PDF
               </a>
-              <button
-                onClick={onClose}
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '6px',
-                  border: '1px solid #27272a',
-                  background: 'transparent',
-                  color: '#a1a1aa',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = '#ef4444'; e.currentTarget.style.color = '#ef4444'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = '#27272a'; e.currentTarget.style.color = '#a1a1aa'; }}
-              >
+              <button onClick={onClose} className="modal-close" aria-label="Close">
                 <X size={16} />
               </button>
             </div>
           </div>
 
-          <div style={{ flexGrow: 1, background: '#08080a' }}>
+          <div style={{ flexGrow: 1, background: 'transparent' }}>
             <embed
               src={viewerUrl}
               type="application/pdf"

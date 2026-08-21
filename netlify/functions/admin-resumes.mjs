@@ -6,9 +6,9 @@ import { audit, database, ensureAdminSchema } from './_lib/database.mjs';
 const MAX_BYTES = 5 * 1024 * 1024;
 
 export default async function handler(req) {
-  if (!isAdmin(req) || !isTrustedOrigin(req)) return unauthorized();
   const sql = database();
   await ensureAdminSchema(sql);
+  if (!(await isAdmin(req, sql)) || !isTrustedOrigin(req)) return unauthorized();
 
   if (req.method === 'GET') {
     const versions = await sql`

@@ -6,7 +6,7 @@ export const CONTACT = {
   whatsappNumber: '918788577239',
   whatsappMessage: "Hi Nayan! I found your portfolio and would like to discuss an opportunity.",
   github: 'https://github.com/Naydhurve3',
-  linkedin: 'https://www.linkedin.com/in/nayan-dhurve22',
+  linkedin: 'https://www.linkedin.com/in/nayan-dhurve-31815a258',
 };
 
 export const whatsappUrl = (message = CONTACT.whatsappMessage) =>

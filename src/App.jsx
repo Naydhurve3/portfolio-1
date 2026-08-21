@@ -1,18 +1,8 @@
 import { lazy, Suspense, useState, useEffect, useCallback } from 'react';
+import { MotionConfig } from 'framer-motion';
 import Preloader from './components/layout/Preloader';
-import Navbar from './components/layout/Navbar';
-import CustomCursor from './components/layout/CustomCursor';
-import ScrollProgress from './components/layout/ScrollProgress';
-import BackToTop from './components/layout/BackToTop';
-import QuickContact from './components/layout/QuickContact';
-import Hero from './components/sections/Hero';
-import About from './components/sections/About';
-import Skills from './components/sections/Skills';
-import Projects from './components/sections/Projects';
-import Experience from './components/sections/Experience';
-/* FUTURE: Testimonials, Blog, Achievements, Playground — preserved in sections/ for later activation */
-import Contact from './components/sections/Contact';
-import Footer from './components/layout/Footer';
+import ResumeModal from './components/shared/ResumeModal';
+import PortfolioExperience from './next/PortfolioExperience';
 
 const AdminPage = lazy(() => import('./components/admin/AdminPage'));
 
@@ -20,6 +10,10 @@ function App() {
   if (window.location.pathname.startsWith('/admin')) {
     return <Suspense fallback={<main className="admin-shell admin-shell--center">Opening private control room…</main>}><AdminPage /></Suspense>;
   }
+  return <PublicApp />;
+}
+
+function PublicApp() {
   const [loading, setLoading] = useState(true);
   const [publicSettings, setPublicSettings] = useState({});
   const [theme, setTheme] = useState(() => {
@@ -38,6 +32,12 @@ function App() {
       .catch(() => {});
   }, []);
 
+  const sections = { about: true, skills: true, projects: true, experience: true, ...(publicSettings.sections || {}) };
+  const channels = { email: true, phone: true, whatsapp: true, github: true, linkedin: true, ...(publicSettings.channels || {}) };
+  const hiddenProjects = Array.isArray(publicSettings.hiddenProjects) ? new Set(publicSettings.hiddenProjects) : new Set();
+  const resumeVisible = publicSettings.resumeVisible !== false;
+  const visibility = { sections, channels, hiddenProjects, resumeVisible };
+
   const toggleTheme = useCallback(() => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   }, []);
@@ -47,37 +47,16 @@ function App() {
   }, []);
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
       <Preloader loading={loading} onComplete={handleLoadComplete} />
 
       {!loading && (
         <>
-          <ScrollProgress />
-          <CustomCursor />
-          <div className="bg-grain" />
-          <div className="bg-grid" />
-
-          <Navbar theme={theme} toggleTheme={toggleTheme} />
-
-          {publicSettings.announcement && (
-            <div className="site-announcement" role="status">{publicSettings.announcement}</div>
-          )}
-
-          <main>
-            <Hero />
-            <About />
-            <Skills />
-            <Projects />
-            <Experience />
-            <Contact publicSettings={publicSettings} />
-          </main>
-
-          <Footer publicSettings={publicSettings} />
-          <QuickContact />
-          <BackToTop />
+          <ResumeModal resumeVisible={resumeVisible} />
+          <PortfolioExperience theme={theme} toggleTheme={toggleTheme} visibility={visibility} />
         </>
       )}
-    </>
+    </MotionConfig>
   );
 }
 

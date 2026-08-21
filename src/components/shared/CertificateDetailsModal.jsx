@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, FileText } from 'lucide-react';
 import CertificateModal from './CertificateModal';
+import { useModalFocus } from './useModalFocus';
 
 export default function CertificateDetailsModal({ cert, onClose }) {
   const overlayRef = useRef(null);
   const [showPdf, setShowPdf] = useState(false);
+  useModalFocus(overlayRef);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -49,54 +51,25 @@ export default function CertificateDetailsModal({ cert, onClose }) {
           }}
         >
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label={cert.title}
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
-            style={{
-              width: '100%',
-              maxWidth: '600px',
-              maxHeight: '80vh',
-              background: '#0a0a0c',
-              border: '1px solid var(--border)',
-              borderRadius: 'var(--radius-xl)',
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
-            }}
+            className="modal-panel"
           >
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '1rem 1.5rem',
-              borderBottom: '1px solid #1c1c24',
-              background: '#111116',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <FileText size={18} color="var(--accent)" />
-                <span style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '0.85rem',
-                  fontWeight: 600,
-                  color: '#fff',
-                }}>{cert.title}</span>
+            <div className="modal-header">
+              <div className="modal-header__title">
+                <FileText size={18} color="var(--accent)" style={{ flexShrink: 0 }} />
+                <span>{cert.title}</span>
               </div>
-              <button
-                onClick={onClose}
-                style={{
-                  width: '32px', height: '32px', borderRadius: '6px',
-                  border: '1px solid #27272a', background: 'transparent',
-                  color: '#a1a1aa', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = '#ef4444'; e.currentTarget.style.color = '#ef4444'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = '#27272a'; e.currentTarget.style.color = '#a1a1aa'; }}
-              >
-                <X size={16} />
-              </button>
+              <div className="modal-header__actions">
+                <button onClick={onClose} className="modal-close" aria-label="Close">
+                  <X size={16} />
+                </button>
+              </div>
             </div>
 
             <div style={{ padding: '1.5rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -132,12 +105,7 @@ export default function CertificateDetailsModal({ cert, onClose }) {
                 }}>Skills Covered</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
                   {cert.skills.map((skill, si) => (
-                    <span key={si} style={{
-                      fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
-                      padding: '0.2rem 0.55rem', borderRadius: '4px',
-                      background: 'var(--surface-hover)', border: '1px solid var(--border)',
-                      color: 'var(--text-muted)',
-                    }}>{skill}</span>
+                    <span key={si} className="project-chip">{skill}</span>
                   ))}
                 </div>
               </div>

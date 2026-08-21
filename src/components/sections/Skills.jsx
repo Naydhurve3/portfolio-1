@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart3, Cpu, Bot, Eye } from 'lucide-react';
 import { skillCategories } from '../../data/skills';
@@ -32,57 +31,28 @@ function ProficiencyDots({ level = 4, total = 5, color }) {
 }
 
 function SkillCard({ skill, index }) {
-  const cardRef = useRef(null);
-  const IconComponent = iconMap[skill.icon];
-
-  const handleMouseMove = (e) => {
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const xc = rect.width / 2;
-    const yc = rect.height / 2;
-    const rotX = (yc - y) / 12;
-    const rotY = (x - xc) / 12;
-    card.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.02, 1.02, 1.02)`;
-    card.style.setProperty('--mouse-x', `${x}px`);
-    card.style.setProperty('--mouse-y', `${y}px`);
-  };
-
-  const handleMouseLeave = () => {
-    if (cardRef.current) {
-      cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-    }
-  };
-
   const color = colors[index % colors.length];
+  const IconComponent = iconMap[skill.icon];
 
   return (
     <motion.div
-      ref={cardRef}
-      className="skill-card"
+      className="skill-card glass-surface"
       variants={fadeUp}
       custom={index}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       style={{
         borderRadius: 'var(--radius-lg)',
         padding: '2rem',
-        background: 'var(--card-bg)',
-        backdropFilter: 'blur(15px)',
-        transition: 'box-shadow 0.3s ease',
-        transformStyle: 'preserve-3d',
+        transition: 'box-shadow 0.3s ease, background 0.3s ease',
         boxShadow: 'var(--card-shadow)',
-        position: 'relative',
-        overflow: 'hidden',
         cursor: 'default',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.boxShadow = `0 15px 35px ${color}20, 0 0 0 1px ${color}`;
+        e.currentTarget.style.background = 'var(--glass-bg-strong)';
       }}
       onMouseLeaveCapture={(e) => {
         e.currentTarget.style.boxShadow = 'var(--card-shadow)';
+        e.currentTarget.style.background = '';
       }}
     >
       <div style={{
@@ -131,7 +101,6 @@ function SkillCard({ skill, index }) {
         display: 'flex',
         flexWrap: 'wrap',
         gap: '0.4rem',
-        transform: 'translateZ(25px)',
         position: 'relative',
         zIndex: 2,
       }}>
@@ -143,12 +112,9 @@ function SkillCard({ skill, index }) {
             viewport={{ once: true }}
             transition={{ delay: 0.3 + i * 0.03, duration: 0.3 }}
             className="skill-chip"
-            style={{
-              transition: 'all 0.2s ease',
-              border: '1px solid var(--border)',
-            }}
+            style={{ transition: 'all 0.2s ease' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = color; e.currentTarget.style.color = color; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = ''; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = ''; e.currentTarget.style.color = ''; }}
           >{tech}</motion.span>
         ))}
       </div>

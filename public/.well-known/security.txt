@@ -1,0 +1,4 @@
+Contact: mailto:nayankdhurve@gmail.com
+Expires: 2027-08-19T00:00:00.000Z
+Preferred-Languages: en
+Policy: https://github.com/Naydhurve3/portfolio-1/security/policy

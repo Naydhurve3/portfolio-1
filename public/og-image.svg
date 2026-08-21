@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0b0f"/>
+      <stop offset="55%" stop-color="#12121a"/>
+      <stop offset="100%" stop-color="#0b0b10"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.85" cy="0.15" r="0.9">
+      <stop offset="0%" stop-color="#818cf8" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#818cf8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="name" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g opacity="0.35" stroke="#818cf8">
+    <path d="M 0 90 H 1200" stroke-width="1"/>
+    <path d="M 0 180 H 1200" stroke-width="1"/>
+    <path d="M 0 270 H 1200" stroke-width="1"/>
+    <path d="M 0 360 H 1200" stroke-width="1"/>
+    <path d="M 0 450 H 1200" stroke-width="1"/>
+    <path d="M 0 540 H 1200" stroke-width="1"/>
+  </g>
+  <g opacity="0.25" stroke="#34d399">
+    <circle cx="150" cy="180" r="140" fill="none" stroke-width="1"/>
+    <circle cx="150" cy="180" r="90" fill="none" stroke-width="1"/>
+    <circle cx="1050" cy="450" r="160" fill="none" stroke-width="1"/>
+    <circle cx="1050" cy="450" r="105" fill="none" stroke-width="1"/>
+    <circle cx="1050" cy="450" r="50" fill="none" stroke-width="1"/>
+  </g>
+  <text x="70" y="250" font-family="Arial, sans-serif" font-size="30" fill="#8b8b98" letter-spacing="6">PORTFOLIO</text>
+  <text x="70" y="340" font-family="Arial, sans-serif" font-weight="bold" font-size="84" fill="url(#name)">Nayan Dhurve</text>
+  <text x="70" y="420" font-family="Arial, sans-serif" font-size="40" fill="#e8e8ee">AI Engineer &amp; Data Scientist</text>
+  <text x="70" y="500" font-family="Arial, sans-serif" font-size="24" fill="#8b8b98">Machine Learning · Computer Vision · RAG &amp; LLM · Data Analytics</text>
+  <rect x="70" y="545" width="180" height="4" rx="2" fill="#818cf8"/>
+  <rect x="262" y="545" width="90" height="4" rx="2" fill="#34d399"/>
+</svg>

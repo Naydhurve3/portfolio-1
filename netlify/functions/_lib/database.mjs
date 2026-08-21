@@ -35,6 +35,13 @@ export async function ensureAdminSchema(sql) {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS portfolio_auth (
+      auth_key TEXT PRIMARY KEY,
+      auth_value TEXT NOT NULL,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
 }
 
 export async function audit(sql, action, entityType, entityId = null, metadata = {}) {

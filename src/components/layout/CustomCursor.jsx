@@ -28,34 +28,23 @@ export default function CustomCursor() {
         circleRef.current.style.left = pos.current.cx + 'px';
         circleRef.current.style.top = pos.current.cy + 'px';
       }
-      requestAnimationFrame(tick);
+      rafId = requestAnimationFrame(tick);
     };
 
-    // Hover scale effects
-    const addHoverListeners = () => {
-      const hoverables = document.querySelectorAll('a, button, .skill-card, .glass-card');
-      hoverables.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-          if (circleRef.current) {
-            circleRef.current.style.width = '48px';
-            circleRef.current.style.height = '48px';
-          }
-        });
-        el.addEventListener('mouseleave', () => {
-          if (circleRef.current) {
-            circleRef.current.style.width = '32px';
-            circleRef.current.style.height = '32px';
-          }
-        });
-      });
+    const onPointerOver = (event) => {
+      const interactive = event.target.closest?.('a, button, input, textarea, select, .skill-card, .glass-card, .project-card');
+      circleRef.current?.classList.toggle('is-interactive', Boolean(interactive));
     };
 
+    let rafId;
     document.addEventListener('mousemove', onMove);
-    tick();
-    setTimeout(addHoverListeners, 100);
+    document.addEventListener('pointerover', onPointerOver);
+    rafId = requestAnimationFrame(tick);
 
     return () => {
       document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('pointerover', onPointerOver);
+      cancelAnimationFrame(rafId);
     };
   }, []);
 

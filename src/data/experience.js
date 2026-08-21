@@ -63,14 +63,6 @@ export const education = [
   }
 ];
 
-export const certifications = [
-  { name: '100 Days of Python Bootcamp', org: 'Udemy (2026)' },
-  { name: 'Data Science Course', org: 'CodeWithHarry (2026)' },
-  { name: 'Machine Learning with Python', org: 'FreeCodeCamp (2024)' },
-  { name: 'Python for DS & AI Dev', org: 'IBM/Coursera (2024)' },
-  { name: 'GenAI Powered Analytics', org: 'Tata/Forage (2024)' }
-];
-
 export const achievements = [
   { name: '⭐ Top 10% Rank Holder in IT Dept', org: 'YCCE' },
   { name: '🛡️ Certified Data Science Associate', org: 'IBM' },

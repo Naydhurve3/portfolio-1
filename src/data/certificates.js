@@ -1,4 +1,4 @@
-export const certificates = [
+﻿export const certificates = [
   {
     id: 'tata-forage',
     title: 'GenAI Powered Data Analytics',
@@ -6,7 +6,7 @@ export const certificates = [
     date: 'Dec 2025',
     description: 'Job simulation for Tata iQ\'s Financial Services team — conducted exploratory data analysis using GenAI tools to assess data quality and identify risk indicators. Proposed a no-code predictive modeling framework for customer delinquency risk. Designed an AI-driven collections strategy with ethical AI principles and regulatory compliance.',
     skills: ['Exploratory Data Analysis', 'GenAI Tools', 'Predictive Modeling', 'AI Strategy', 'Ethical AI'],
-    pdfUrl: '/certificates/Tata GenAI Powered Data Analytics Completion Certificate.pdf'
+    pdfUrl: '/certificates/Tata%20GenAI%20Powered%20Data%20Analytics%20Completion%20Certificate.pdf'
   },
   {
     id: 'udemy-100-days',
@@ -15,7 +15,7 @@ export const certificates = [
     date: '2026',
     description: '57-hour comprehensive Python bootcamp covering automation, web scraping (Selenium, Beautiful Soup), game development, data science (Pandas, NumPy, Matplotlib, Scikit-learn, Plotly, Seaborn), Flask web development, REST APIs, SQL, and 100 hands-on projects from beginner to professional level.',
     skills: ['Python', 'Selenium', 'Beautiful Soup', 'Flask', 'Pandas', 'NumPy', 'Scikit-learn', 'APIs', 'SQL'],
-    pdfUrl: '/certificates/UDEMY PYTHON 100 DAYS BOOTCAMP CERTIFICATE.pdf'
+    pdfUrl: '/certificates/UDEMY%20PYTHON%20100%20DAYS%20BOOTCAMP%20CERTIFICATE.pdf'
   },
   {
     id: 'harry-datascience',
@@ -24,7 +24,7 @@ export const certificates = [
     date: 'July 2026',
     description: '33-hour all-in-one data science course covering Python fundamentals, NumPy, Pandas, Matplotlib, Seaborn, SQL, statistics, probability, machine learning with Scikit-learn, deep learning, LLMs, Git, Jupyter Notebooks, Google Colab, and a RAG-based AI Teaching Assistant capstone project.',
     skills: ['Python', 'Pandas', 'NumPy', 'Scikit-learn', 'SQL', 'Statistics', 'Machine Learning', 'RAG', 'Git'],
-    pdfUrl: '/certificates/The Ultimate Job Ready Data Science Course.pdf'
+    pdfUrl: '/certificates/The%20Ultimate%20Job%20Ready%20Data%20Science%20Course.pdf'
   },
   {
     id: 'harry-python',
@@ -33,7 +33,7 @@ export const certificates = [
     date: 'July 2026',
     description: '17-hour Python fundamentals bootcamp covering variables, data types, control flow, OOP, file I/O, external libraries, Flask web apps, Git version control, and hands-on projects including an AI-powered TikTok/Reel generator (VidSnapAI).',
     skills: ['Python', 'OOP', 'Flask', 'Git', 'File I/O', 'API Integration'],
-    pdfUrl: '/certificates/Complete 2026 Python Bootcamp Learn Python from Scratch.pdf'
+    pdfUrl: '/certificates/Complete%202026%20Python%20Bootcamp%20Learn%20Python%20from%20Scratch.pdf'
   },
   {
     id: 'freecodecamp-ml',
@@ -52,6 +52,6 @@ export const certificates = [
     date: '2024',
     description: '5-module course covering Python basics, data structures, conditions and branching, loops, functions, OOP, exception handling. Worked with Pandas and NumPy for data manipulation, REST APIs using requests library, and web scraping with BeautifulSoup. 1.5M+ enrolled students worldwide.',
     skills: ['Python', 'Pandas', 'NumPy', 'REST APIs', 'Web Scraping', 'Jupyter Notebooks'],
-    pdfUrl: '/certificates/COURSERA IBM PYTHON CERTIFICATE.pdf'
+    pdfUrl: '/certificates/COURSERA%20IBM%20PYTHON%20CERTIFICATE.pdf'
   }
 ];

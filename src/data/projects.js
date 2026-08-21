@@ -31,7 +31,7 @@ export const projects = [
   {
     id: 'atm-simulation',
     tag: '02 / ML ENGINEERING',
-    title: 'Banking ML Analytics & ATM Simulation Platform',
+    title: 'FinSight · ATM & Banking Ecosystem v3.0',
     year: '2026',
     status: '60 tests',
     metricValue: '20 models',
@@ -52,8 +52,10 @@ export const projects = [
     ],
     evidence: ['65 banks × 24 months', '3 SQLite databases', '20 ML/DL models', '60 automated tests'],
     chips: ['Python', 'XGBoost', 'Prophet', 'TensorFlow', 'Flask', 'SQLite', 'Plotly', 'Model registry'],
-    github: 'https://github.com/Naydhurve3/ATM-Simulation',
-    sourceLabel: 'README + architecture docs',
+    github: 'https://github.com/Naydhurve3/FinSight',
+    live: 'https://atm-simulation-tau.vercel.app/auth/login',
+    liveLabel: 'Live Demo',
+    sourceLabel: 'README + v3.0 architecture',
     color: '#f59e0b'
   },
   {
@@ -85,21 +87,38 @@ export const projects = [
     liveLabel: 'Research Atlas',
     sourceLabel: 'README + v2 pipeline',
     color: '#ef4444'
+  },
+  {
+    id: 'lits17-liver-segmentation',
+    tag: '04 / DEEP LEARNING · MEDICAL IMAGING',
+    title: 'Liver & Tumor Segmentation Platform (LiTS-17)',
+    year: '2026',
+    status: 'External validation',
+    metricValue: '131 volumes',
+    metricLabel: 'LiTS-17 + 3D-IRCADb validation',
+    description: 'A complete LiTS-17 liver tumour segmentation pipeline: EDA and spatial forensics, patient-aware splits, a two-stage ROI model, checkpoint fusion (Mark 1 → 4E), and external validation on 3D-IRCADb.',
+    decision: 'A two-stage ROI strategy (liver first, tumour inside the liver mask) reduces the search space, while checkpoint fusion across epochs stabilises segmentation quality.',
+    caseStudy: {
+      problem: 'Liver tumour segmentation in 3D CT is hard to validate honestly: naive random splits leak slices from the same patient between train and test sets.',
+      solution: 'Built a canonical LiTS-17 build (131 volumes / 58,638 slices) with QA, spatial forensics, patient-aware train/val/test splits, a 2-stage ROI pipeline, and Mark 1 → 4E checkpoint fusion, shipped as a reproducible manifest-verified build.',
+      results: 'Delivered a fully documented platform with external 3D-IRCADb validation, radiological QA (Radiomics), license-compliant distribution (CC BY-NC 4.0), and a reproducible build identified by SHA-256 manifest.'
+    },
+    workflow: [
+      { label: 'LiTS-17 raw', detail: '131 CT volumes · 58,638 slices' },
+      { label: 'EDA + forensics', detail: 'Spatial & quality QA' },
+      { label: 'Patient-aware splits', detail: 'No slice leakage' },
+      { label: '2-stage ROI', detail: 'Liver → tumour focus' },
+      { label: 'Fusion + validation', detail: 'Mark 1→4E + 3D-IRCADb' }
+    ],
+    evidence: ['131 volumes / 58,638 slices', 'Patient-aware splits', '2-stage ROI pipeline', 'Checkpoint fusion Mark 1→4E', '3D-IRCADb external validation'],
+    chips: ['PyTorch', 'Segmentation', 'LiTS-17', '3D CT', 'ROI pipeline', 'Radiomics', 'Checkpoint fusion', 'Medical imaging'],
+    github: 'https://github.com/Naydhurve3/Liver-Tumor-Segmentation-LiTS-17-',
+    sourceLabel: 'README + manifest build',
+    color: '#ef4444'
   }
 ];
 
 export const secondaryProjects = [
-  {
-    id: 'liver-cancer',
-    tag: 'COMPUTER VISION',
-    title: 'Liver CT Cancer Classification',
-    metricValue: '58,638 slices',
-    metricLabel: 'LiTS-derived PNG dataset',
-    description: 'CNN experimentation for liver CT cancer classification using preprocessing, augmentation, TFRecords, and a constrained 10-epoch training run.',
-    chips: ['Python', 'TensorFlow', 'CNN', 'TFRecord', 'Medical imaging'],
-    github: 'https://github.com/Naydhurve3/LIVER-CT-SCAN-DATASET',
-    color: '#ef4444'
-  },
   {
     id: 'movie-recommender',
     tag: 'RECOMMENDER SYSTEMS',
@@ -121,5 +140,71 @@ export const secondaryProjects = [
     chips: ['Python', 'K-Means', 'PCA', 'Cosine similarity', 'EDA'],
     github: 'https://github.com/Naydhurve3/eCommerce-Transactions-Dataset',
     color: '#a855f7'
+  },
+  {
+    id: 'resume-parser',
+    tag: 'NLP · HIRING TOOLS',
+    title: 'Resume Parser & Skill Matcher',
+    metricValue: 'spaCy',
+    metricLabel: 'NLP extraction pipeline',
+    description: 'Extracts text from .docx resumes, preprocesses with spaCy, scores each CV against a desired-skill set, and surfaces named entities plus word clouds for review.',
+    chips: ['Python', 'spaCy', 'NLP', 'NER', 'WordCloud'],
+    github: 'https://github.com/Naydhurve3/Resume-Parser-using-ML',
+    color: '#10b981'
+  },
+  {
+    id: 'flipkart-sentiment',
+    tag: 'NLP · E-COMMERCE',
+    title: 'Flipkart Reviews Sentiment Analysis',
+    metricValue: '3 classes',
+    metricLabel: 'Positive · negative · neutral',
+    description: 'Cleans and preprocesses real Flipkart review text with NLTK, classifies sentiment polarity, and visualises distributions with Seaborn, Plotly, and WordCloud.',
+    chips: ['Python', 'NLTK', 'Seaborn', 'Plotly', 'WordCloud'],
+    github: 'https://github.com/Naydhurve3/Flipkart-Sentiment-Analysis',
+    color: '#f43f5e'
+  },
+  {
+    id: 'sales-forecast',
+    tag: 'TIME SERIES',
+    title: 'Sales Forecasting with ARIMA',
+    metricValue: 'ARIMA',
+    metricLabel: 'Monthly trend projection',
+    description: 'Analyses historical monthly sales, inspects stationarity and seasonality, then fits ARIMA to project future demand for business planning.',
+    chips: ['Python', 'ARIMA', 'Time series', 'Pandas', 'Forecasting'],
+    github: 'https://github.com/Naydhurve3/Sales-Forecast',
+    color: '#f59e0b'
+  },
+  {
+    id: 'facial-expression',
+    tag: 'COMPUTER VISION',
+    title: 'Facial Expression Detection (CNN + SVM)',
+    metricValue: 'CNN→SVM',
+    metricLabel: 'Transfer-learned features',
+    description: 'Trains a CNN for expression classification, then reuses its learned features to train an SVM classifier—combining deep feature extraction with classical classification.',
+    chips: ['Python', 'TensorFlow', 'CNN', 'SVM', 'Transfer learning'],
+    github: 'https://github.com/Naydhurve3/Facial-Expression-Detection-Using-Neural-Network',
+    color: '#67e8f9'
+  },
+  {
+    id: 'house-price',
+    tag: 'REGRESSION',
+    title: 'House Price Prediction (California Housing)',
+    metricValue: '8 features',
+    metricLabel: 'Location, age & income drivers',
+    description: 'Preprocesses and visualises the classic California housing dataset, then trains regression models and evaluates prediction quality against the median price target.',
+    chips: ['Python', 'Pandas', 'Scikit-learn', 'Regression', 'EDA'],
+    github: 'https://github.com/Naydhurve3/HOUSE-PRICE-PREDICTION',
+    color: '#a855f7'
+  },
+  {
+    id: 'book-recommender',
+    tag: 'RECOMMENDER SYSTEMS',
+    title: 'Book Recommendation Engine (KNN)',
+    metricValue: 'Book-Crossing',
+    metricLabel: 'Collaborative filtering',
+    description: 'Applies k-nearest-neighbours collaborative filtering over the Book-Crossing ratings dataset to suggest titles based on user taste patterns.',
+    chips: ['Python', 'KNN', 'Collaborative filtering', 'Pandas'],
+    github: 'https://github.com/Naydhurve3/Book-Recommendation-Engine-using-KNN',
+    color: '#10b981'
   }
 ];

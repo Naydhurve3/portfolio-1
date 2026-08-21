@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import { rateLimit } from './_lib/rate-limit.mjs';
 
 const json = (statusCode, body) => ({
   statusCode,
@@ -11,6 +12,9 @@ const clean = (value, max) => String(value || '').trim().slice(0, max);
 export async function handler(event) {
   if (event.httpMethod !== 'POST') return json(405, { error: 'Method not allowed' });
   if (!process.env.DATABASE_URL) return json(503, { error: 'Contact service is not configured' });
+
+  const limited = rateLimit(event, { key: 'contact', limit: 10, windowMs: 60 * 60 * 1000, windowLabel: '1 hour' });
+  if (limited) return limited;
 
   try {
     const body = JSON.parse(event.body || '{}');

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Mail, Phone, FileText, MessageCircle, ExternalLink, CheckCircle2 } from 'lucide-react';
 import CertificateModal from '../shared/CertificateModal';
@@ -50,6 +50,16 @@ export default function Contact({ publicSettings = {} }) {
   const [errors, setErrors] = useState({});
   const [submitState, setSubmitState] = useState('idle');
   const [showResume, setShowResume] = useState(false);
+  const formRef = useRef(null);
+
+  useEffect(() => {
+    if (submitState !== 'success') return;
+    const timer = setTimeout(() => {
+      setSubmitState('idle');
+      setErrors({});
+    }, 3200);
+    return () => clearTimeout(timer);
+  }, [submitState]);
 
   const validate = () => {
     const errs = {};
@@ -79,16 +89,12 @@ export default function Contact({ publicSettings = {} }) {
 
   const inputStyle = {
     width: '100%',
-    padding: '0.85rem 1rem',
-    paddingTop: '1.5rem',
-    background: 'var(--surface-hover)',
-    border: '1px solid var(--border)',
-    borderRadius: 'var(--radius-md)',
+    borderColor: 'var(--glass-border)',
     color: 'var(--text)',
     fontFamily: 'var(--font-body)',
     fontSize: '0.9rem',
     outline: 'none',
-    transition: 'border-color 0.3s ease'
+    transition: 'border-color 0.3s ease, background 0.3s ease'
   };
 
   const labelStyle = {
@@ -114,8 +120,11 @@ export default function Contact({ publicSettings = {} }) {
       )}
       <div className="container">
         <motion.span className="section-num" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-          08 / connect
+          05 / connect
         </motion.span>
+        <motion.h2 className="section-title" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
+          Contact
+        </motion.h2>
 
         <div style={{
           display: 'grid',
@@ -125,40 +134,11 @@ export default function Contact({ publicSettings = {} }) {
         }}>
           {/* Info Column */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-            <h2 style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-              fontWeight: 800,
-              marginBottom: '1.5rem',
-              letterSpacing: '-0.04em',
-              lineHeight: 1.1
-            }}>
-              Let's Build<br />Something Great
-            </h2>
-
-            <p style={{
-              fontSize: '1rem',
-              color: 'var(--text-secondary)',
-              marginBottom: '2.5rem',
-              lineHeight: 1.7
-            }}>
-              Have an opening in your AI team, a dataset challenge, or want to collaborate on GenAI integrations? Drop me a line.
-            </p>
-
             {/* Contact Info Cards */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
-              <a href={mailtoUrl()} className="contact-channel" style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                padding: '1rem',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border)',
-                background: 'var(--card-bg)',
-                transition: 'border-color 0.3s ease'
-              }}
+              <a href={mailtoUrl()} className="contact-channel" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}
                 onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = ''}
               >
                 <Mail size={20} style={{ color: 'var(--accent)' }} />
                 <div>
@@ -168,18 +148,9 @@ export default function Contact({ publicSettings = {} }) {
                 <ExternalLink size={15} style={{ marginLeft: 'auto', color: 'var(--text-muted)' }} />
               </a>
 
-              <a href={`tel:${CONTACT.phoneE164}`} className="contact-channel" style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1rem',
-                padding: '1rem',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border)',
-                background: 'var(--card-bg)',
-                transition: 'border-color 0.3s ease'
-              }}
+              <a href={`tel:${CONTACT.phoneE164}`} className="contact-channel" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}
                 onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
-                onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                onMouseLeave={e => e.currentTarget.style.borderColor = ''}
               >
                 <Phone size={20} style={{ color: 'var(--accent)' }} />
                 <div>
@@ -215,16 +186,17 @@ export default function Contact({ publicSettings = {} }) {
             variants={fadeUp}
             className="glass-card"
           >
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} ref={formRef}>
               <div className="contact-form__eyebrow">Direct enquiry</div>
               <h3 className="contact-form__title">Tell me what you&apos;re building.</h3>
               <p className="contact-form__intro">{publicSettings.responseTime || 'I typically reply within 24 hours.'}</p>
               <input className="contact-honeypot" name="company" tabIndex="-1" autoComplete="off" aria-hidden="true" />
               {/* Name */}
-              <div style={{ position: 'relative', marginBottom: '1rem' }}>
-                <label style={labelStyle}>Name *</label>
+              <div className="form-field">
+                <label htmlFor="contact-name" style={labelStyle}>Name *</label>
                 <input
                   type="text"
+                  id="contact-name"
                   name="name"
                   autoComplete="name"
                   aria-label="Name"
@@ -232,16 +204,17 @@ export default function Contact({ publicSettings = {} }) {
                   onChange={e => setFormState(s => ({ ...s, name: e.target.value }))}
                   style={{ ...inputStyle, borderColor: errors.name ? 'var(--danger)' : undefined }}
                   onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-                  onBlur={e => { if (!errors.name) e.target.style.borderColor = 'var(--border)'; }}
+                  onBlur={e => { if (!errors.name) e.target.style.borderColor = 'var(--glass-border)'; }}
                 />
-                {errors.name && <div style={{ fontSize: '0.72rem', color: 'var(--danger)', marginTop: '0.25rem' }}>{errors.name}</div>}
+                {errors.name && <div className="form-field__error">{errors.name}</div>}
               </div>
 
               {/* Email */}
-              <div style={{ position: 'relative', marginBottom: '1rem' }}>
-                <label style={labelStyle}>Email *</label>
+              <div className="form-field">
+                <label htmlFor="contact-email" style={labelStyle}>Email *</label>
                 <input
                   type="email"
+                  id="contact-email"
                   name="email"
                   autoComplete="email"
                   aria-label="Email"
@@ -249,39 +222,41 @@ export default function Contact({ publicSettings = {} }) {
                   onChange={e => setFormState(s => ({ ...s, email: e.target.value }))}
                   style={{ ...inputStyle, borderColor: errors.email ? 'var(--danger)' : undefined }}
                   onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-                  onBlur={e => { if (!errors.email) e.target.style.borderColor = 'var(--border)'; }}
+                  onBlur={e => { if (!errors.email) e.target.style.borderColor = 'var(--glass-border)'; }}
                 />
-                {errors.email && <div style={{ fontSize: '0.72rem', color: 'var(--danger)', marginTop: '0.25rem' }}>{errors.email}</div>}
+                {errors.email && <div className="form-field__error">{errors.email}</div>}
               </div>
 
               {/* Subject */}
-              <div style={{ position: 'relative', marginBottom: '1rem' }}>
-                <label style={labelStyle}>Subject</label>
+              <div className="form-field">
+                <label htmlFor="contact-subject" style={labelStyle}>Subject</label>
                 <input
                   type="text"
+                  id="contact-subject"
                   name="subject"
                   aria-label="Subject"
                   value={formState.subject}
                   onChange={e => setFormState(s => ({ ...s, subject: e.target.value }))}
                   style={inputStyle}
                   onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-                  onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                  onBlur={e => e.target.style.borderColor = 'var(--glass-border)'}
                 />
               </div>
 
               {/* Message */}
-              <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
-                <label style={labelStyle}>Message *</label>
+              <div className="form-field">
+                <label htmlFor="contact-message" style={labelStyle}>Message *</label>
                 <textarea
+                  id="contact-message"
                   value={formState.message}
                   name="message"
                   aria-label="Message"
                   onChange={e => setFormState(s => ({ ...s, message: e.target.value }))}
                   style={{ ...inputStyle, minHeight: '120px', resize: 'vertical', borderColor: errors.message ? 'var(--danger)' : undefined }}
                   onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-                  onBlur={e => { if (!errors.message) e.target.style.borderColor = 'var(--border)'; }}
+                  onBlur={e => { if (!errors.message) e.target.style.borderColor = 'var(--glass-border)'; }}
                 />
-                {errors.message && <div style={{ fontSize: '0.72rem', color: 'var(--danger)', marginTop: '0.25rem' }}>{errors.message}</div>}
+                {errors.message && <div className="form-field__error">{errors.message}</div>}
               </div>
 
               <button

@@ -1,7 +1,12 @@
 import { getStore } from '@netlify/blobs';
 import { database, ensureAdminSchema } from './_lib/database.mjs';
 
-export default async function handler() {
+const fallbackResumeUrl = req => {
+  const origin = process.env.URL || (req && new URL(req.url).origin) || '';
+  return `${origin}/certificates/Nayan%20Dhurve%20Resume.pdf`;
+};
+
+export default async function handler(req) {
   try {
     const sql = database();
     await ensureAdminSchema(sql);
@@ -9,9 +14,9 @@ export default async function handler() {
       SELECT object_key, original_name FROM portfolio_resume_versions
       WHERE is_active = TRUE ORDER BY activated_at DESC LIMIT 1
     `;
-    if (!rows.length) return Response.redirect('/certificates/Nayan%20Dhurve%20Resume.pdf', 302);
+    if (!rows.length) return Response.redirect(fallbackResumeUrl(req), 302);
     const bytes = await getStore('portfolio-private').get(rows[0].object_key, { type: 'arrayBuffer' });
-    if (!bytes) return Response.redirect('/certificates/Nayan%20Dhurve%20Resume.pdf', 302);
+    if (!bytes) return Response.redirect(fallbackResumeUrl(req), 302);
     return new Response(bytes, {
       headers: {
         'Content-Type': 'application/pdf',
@@ -21,6 +26,6 @@ export default async function handler() {
       }
     });
   } catch {
-    return Response.redirect('/certificates/Nayan%20Dhurve%20Resume.pdf', 302);
+    return Response.redirect(fallbackResumeUrl(req), 302);
   }
 }

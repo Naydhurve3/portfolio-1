@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { motion } from 'framer-motion';
-import HeroScene from '../three/HeroScene';
+
+const HeroScene = lazy(() => import('../three/HeroScene'));
 
 const roles = [
   { emoji: '📊', title: 'Data Science & Analytics', color: '#818cf8' },
@@ -18,9 +19,27 @@ const fadeUp = {
   })
 };
 
-export default function Hero() {
+export default function Hero({ sections = {} }) {
+  const heroRef = useRef(null);
+  const [sceneActive, setSceneActive] = useState(false);
+  const [reducedMotion] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false
+  );
+  const firstVisibleSection = ['about', 'skills', 'projects', 'experience'].find(id => sections[id] !== false);
+
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setSceneActive(entry.isIntersecting),
+      { threshold: 0.05 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id="hero" style={{
+    <section id="hero" ref={heroRef} style={{
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
@@ -32,7 +51,9 @@ export default function Hero() {
       paddingBottom: '5rem'
     }}>
       {/* 3D Background Scene */}
-      <HeroScene />
+      <Suspense fallback={null}>
+        <HeroScene active={sceneActive && !reducedMotion} />
+      </Suspense>
 
       {/* Foreground Content */}
       <div style={{
@@ -82,7 +103,7 @@ export default function Hero() {
         >
           <span style={{
             fontSize: 'clamp(2.5rem, 9vw, 7rem)',
-            fontWeight: 850,
+            fontWeight: 800,
             letterSpacing: '-0.04em',
             textTransform: 'uppercase',
             background: 'linear-gradient(135deg, var(--text) 0%, var(--accent) 100%)',
@@ -128,9 +149,10 @@ export default function Hero() {
                 gap: '0.5rem',
                 padding: '0.6rem 1.2rem',
                 borderRadius: 'var(--radius-full)',
-                border: '1px solid var(--border)',
-                background: 'var(--card-bg)',
-                backdropFilter: 'blur(10px)',
+                border: '1px solid var(--glass-border)',
+                background: 'var(--glass-bg)',
+                backdropFilter: 'var(--glass-blur)',
+                WebkitBackdropFilter: 'var(--glass-blur)',
                 fontSize: '0.82rem',
                 fontWeight: 600,
                 color: role.color,
@@ -181,26 +203,10 @@ export default function Hero() {
           ))}
         </motion.div>
 
-        {/* CTAs */}
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          custom={4}
-          variants={fadeUp}
-          style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center' }}
-        >
-          <a href="#projects" className="btn btn-primary"
-            onClick={(e) => { e.preventDefault(); document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); }}>
-            Explore Work
-          </a>
-          <a href="#contact" className="btn btn-secondary"
-            onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }}>
-            Contact Me
-          </a>
-        </motion.div>
-
         {/* Scroll Indicator */}
-        <motion.div
+        {firstVisibleSection && (
+        <motion.a
+          href={`#${firstVisibleSection}`}
           initial="hidden"
           animate="visible"
           custom={5}
@@ -211,9 +217,11 @@ export default function Hero() {
             flexDirection: 'column',
             alignItems: 'center',
             gap: '0.5rem',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            textDecoration: 'none'
           }}
-          onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+          onClick={(e) => { e.preventDefault(); document.getElementById(firstVisibleSection)?.scrollIntoView({ behavior: 'smooth' }); }}
+          aria-label="Scroll to next section"
         >
           <div style={{
             width: '4px',
@@ -229,16 +237,9 @@ export default function Hero() {
             letterSpacing: '0.1em',
             textTransform: 'uppercase'
           }}>Scroll</span>
-        </motion.div>
+        </motion.a>
+        )}
       </div>
-
-      <style>{`
-        @keyframes indicatorScroll {
-          0% { transform: translateY(-8px); opacity: 0; }
-          50% { opacity: 1; }
-          100% { transform: translateY(8px); opacity: 0; }
-        }
-      `}</style>
     </section>
   );
 }

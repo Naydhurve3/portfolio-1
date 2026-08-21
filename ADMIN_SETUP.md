@@ -35,10 +35,11 @@ The admin UI is available at `/admin`. It controls resume versions, public avail
 
 ## Forgotten password
 
-1. Select **Forgot password?** on `/admin`.
-2. Enter the offline recovery code printed by `npm run admin:hash`.
-3. Choose a new password of at least 12 characters.
-4. A successful reset invalidates every existing admin session.
+1. If recovery was not configured previously, run `npm run admin:recovery` locally.
+2. Add only the printed `ADMIN_RECOVERY_HASH` value to the hosting environment, redeploy, and keep the separately printed recovery code offline.
+3. Select **Forgot password?** on `/admin`.
+4. Enter that offline recovery code and choose a new password of at least 12 characters.
+5. A successful reset invalidates every existing admin session.
 
 The raw recovery code is never stored in Git, Neon or the browser. If it is also lost, run `npm run admin:hash` again and replace `ADMIN_PASSWORD_HASH`, `ADMIN_SESSION_SECRET` and `ADMIN_RECOVERY_HASH` in the hosting environment.
 

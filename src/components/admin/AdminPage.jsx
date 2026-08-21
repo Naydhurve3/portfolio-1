@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
   Eye, FileClock, FileText, FileUp, KeyRound, LayoutGrid, Lock, LogOut,
-  Mail, MessageSquare, Save, ShieldCheck, SlidersHorizontal, Users, ExternalLink
+  Mail, MessageSquare, Save, ShieldCheck, SlidersHorizontal, Users, ExternalLink,
+  ArrowLeft, RefreshCcw
 } from 'lucide-react';
 import { projects as featuredProjects, secondaryProjects } from '../../data/projects';
 
@@ -48,6 +49,10 @@ export default function AdminPage() {
   const [checking, setChecking] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
+  const [recoveryMode, setRecoveryMode] = useState(false);
+  const [recoveryCode, setRecoveryCode] = useState('');
+  const [recoveryPassword, setRecoveryPassword] = useState('');
+  const [recoveryConfirm, setRecoveryConfirm] = useState('');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
@@ -86,6 +91,22 @@ export default function AdminPage() {
     try {
       await request('/api/admin/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) });
       setPassword(''); setAuthenticated(true); await loadDashboard();
+    } catch (err) { setError(err.message); }
+    finally { setBusy(false); }
+  };
+
+  const recoverPassword = async event => {
+    event.preventDefault();
+    setBusy(true); setError(''); setNotice('');
+    try {
+      if (recoveryPassword !== recoveryConfirm) throw new Error('New passwords do not match');
+      const data = await request('/api/admin/recovery', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recoveryCode, newPassword: recoveryPassword }),
+      });
+      setRecoveryCode(''); setRecoveryPassword(''); setRecoveryConfirm('');
+      setRecoveryMode(false); setNotice(data.message || 'Password reset. Sign in with your new password.');
     } catch (err) { setError(err.message); }
     finally { setBusy(false); }
   };
@@ -165,6 +186,28 @@ export default function AdminPage() {
   const activeVersion = versions.find(version => version.is_active);
 
   if (checking) return <main className="admin-shell admin-shell--center">Checking secure session…</main>;
+  if (!authenticated && recoveryMode) return (
+    <main className="admin-shell admin-shell--center">
+      <form className="admin-login admin-login--recovery" onSubmit={recoverPassword}>
+        <div className="admin-login__icon"><RefreshCcw size={28} /></div>
+        <span className="admin-login__eyebrow">Secure account recovery</span>
+        <h1>Reset access</h1>
+        <p>Use the offline recovery code created during setup. Resetting the password signs out every existing admin session.</p>
+        <label>Recovery code
+          <div className="admin-login__field"><KeyRound size={15} /><input type="password" value={recoveryCode} onChange={e => setRecoveryCode(e.target.value)} autoComplete="off" required /></div>
+        </label>
+        <label>New password
+          <div className="admin-login__field"><Lock size={15} /><input type="password" value={recoveryPassword} onChange={e => setRecoveryPassword(e.target.value)} autoComplete="new-password" minLength={12} required /></div>
+        </label>
+        <label>Confirm new password
+          <div className="admin-login__field"><Lock size={15} /><input type="password" value={recoveryConfirm} onChange={e => setRecoveryConfirm(e.target.value)} autoComplete="new-password" minLength={12} required /></div>
+        </label>
+        {error && <div className="admin-error" role="alert">{error}</div>}
+        <button className="btn btn-accent" disabled={busy}>{busy ? 'Resetting…' : 'Reset password securely'}</button>
+        <button type="button" className="admin-login__text-button" onClick={() => { setRecoveryMode(false); setError(''); }}><ArrowLeft size={13} /> Back to sign in</button>
+      </form>
+    </main>
+  );
   if (!authenticated) return (
     <main className="admin-shell admin-shell--center">
       <form className="admin-login" onSubmit={login}>
@@ -176,7 +219,9 @@ export default function AdminPage() {
           <div className="admin-login__field"><Lock size={15} /><input type="password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" required /></div>
         </label>
         {error && <div className="admin-error" role="alert">{error}</div>}
+        {notice && <div className="admin-notice" role="status">{notice}</div>}
         <button className="btn btn-accent" disabled={busy}>{busy ? 'Verifying…' : 'Enter securely'}</button>
+        <button type="button" className="admin-login__text-button" onClick={() => { setRecoveryMode(true); setError(''); setNotice(''); }}>Forgot password?</button>
         <a href="/">← Return to portfolio</a>
       </form>
     </main>

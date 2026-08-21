@@ -19,6 +19,11 @@
   status = 200
 
 [[redirects]]
+  from = "/api/admin/recovery"
+  to = "/.netlify/functions/admin-recovery"
+  status = 200
+
+[[redirects]]
   from = "/api/admin/resumes"
   to = "/.netlify/functions/admin-resumes"
   status = 200

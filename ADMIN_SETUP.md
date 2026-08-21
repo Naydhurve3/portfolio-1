@@ -25,12 +25,22 @@ The admin UI is available at `/admin`. It controls resume versions, public avail
    - `DATABASE_URL`: the full Neon Postgres connection string.
    - `ADMIN_PASSWORD_HASH`: the generated `scrypt$...` value.
    - `ADMIN_SESSION_SECRET`: the generated random value.
+   - `ADMIN_RECOVERY_HASH`: the generated recovery-code hash. Store the separately printed recovery code offline; it is shown only once.
 
 3. Mark all three as secret values. If your Netlify plan supports scopes, restrict them to **Functions**.
 
 4. Redeploy the production site. Environment-variable changes are applied to Functions at deploy time.
 
 5. Open `https://YOUR_DOMAIN/admin`, sign in, upload a sanitized public resume, preview it through the portfolio, and keep the private master resume outside the public website.
+
+## Forgotten password
+
+1. Select **Forgot password?** on `/admin`.
+2. Enter the offline recovery code printed by `npm run admin:hash`.
+3. Choose a new password of at least 12 characters.
+4. A successful reset invalidates every existing admin session.
+
+The raw recovery code is never stored in Git, Neon or the browser. If it is also lost, run `npm run admin:hash` again and replace `ADMIN_PASSWORD_HASH`, `ADMIN_SESSION_SECRET` and `ADMIN_RECOVERY_HASH` in the hosting environment.
 
 ## Resume lifecycle
 

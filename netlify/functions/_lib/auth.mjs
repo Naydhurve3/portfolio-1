@@ -35,6 +35,10 @@ export async function verifyPasswordAsync(sql, password) {
   return verifyPassword(password, await getStoredPasswordHash(sql));
 }
 
+export function verifyRecoveryCode(code) {
+  return verifyPassword(String(code || '').trim(), process.env.ADMIN_RECOVERY_HASH || '');
+}
+
 export async function getSessionEpoch(sql) {
   if (!sql) return 0;
   try {

@@ -1711,6 +1711,25 @@ body::before {
   padding: 0.8rem 0;
 }
 .admin-login .admin-error { margin: 0; }
+.admin-login .admin-notice { margin: 0; }
+.admin-login__text-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  align-self: center;
+  padding: 0.25rem;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: 700 0.7rem/1.2 var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.admin-login__text-button:hover { color: var(--text); text-shadow: 0 0 18px var(--accent-glow); }
+.admin-login__text-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: var(--radius-sm); }
+.admin-login--recovery { width: min(100%, 520px); }
 
 /* App layout */
 .admin-shell--app { display: flex; min-height: 100vh; }

@@ -25,7 +25,7 @@ The admin UI is available at `/admin`. It controls resume versions, public avail
    - `DATABASE_URL`: the full Neon Postgres connection string.
    - `ADMIN_PASSWORD_HASH`: the generated `scrypt$...` value.
    - `ADMIN_SESSION_SECRET`: the generated random value.
-   - `ADMIN_RECOVERY_HASH`: the generated recovery-code hash. Store the separately printed recovery code offline; it is shown only once.
+   - `ADMIN_RECOVERY_CODE`: the generated recovery code. Store it as a Sensitive value and keep a separate offline copy.
 
 3. Mark all three as secret values. If your Netlify plan supports scopes, restrict them to **Functions**.
 
@@ -35,13 +35,13 @@ The admin UI is available at `/admin`. It controls resume versions, public avail
 
 ## Forgotten password
 
-1. If recovery was not configured previously, run `npm run admin:recovery` locally.
-2. Add only the printed `ADMIN_RECOVERY_HASH` value to the hosting environment, redeploy, and keep the separately printed recovery code offline.
+1. Run `npm run admin:recovery` locally.
+2. Add the printed `ADMIN_RECOVERY_CODE` value to the hosting environment as a Sensitive variable and redeploy.
 3. Select **Forgot password?** on `/admin`.
 4. Enter that offline recovery code and choose a new password of at least 12 characters.
 5. A successful reset invalidates every existing admin session.
 
-The raw recovery code is never stored in Git, Neon or the browser. If it is also lost, run `npm run admin:hash` again and replace `ADMIN_PASSWORD_HASH`, `ADMIN_SESSION_SECRET` and `ADMIN_RECOVERY_HASH` in the hosting environment.
+The recovery code is never stored in Git, Neon or the browser bundle. If it is lost, run `npm run admin:recovery` again, replace `ADMIN_RECOVERY_CODE` in the hosting environment, and redeploy.
 
 ## Resume lifecycle
 

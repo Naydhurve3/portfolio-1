@@ -9,7 +9,7 @@ export default async function handler(req) {
   const limited = rateLimit(req, { key: 'password-recovery', limit: 3, windowMs: 30 * 60 * 1000, windowLabel: '30 minutes' });
   if (limited) return Response.json(JSON.parse(limited.body), { status: limited.statusCode, headers: limited.headers });
 
-  if (!process.env.ADMIN_RECOVERY_HASH) {
+  if (!process.env.ADMIN_RECOVERY_CODE && !process.env.ADMIN_RECOVERY_HASH) {
     return Response.json({ error: 'Password recovery has not been configured' }, { status: 503 });
   }
 

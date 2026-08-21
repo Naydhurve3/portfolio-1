@@ -36,7 +36,14 @@ export async function verifyPasswordAsync(sql, password) {
 }
 
 export function verifyRecoveryCode(code) {
-  return verifyPassword(String(code || '').trim(), process.env.ADMIN_RECOVERY_HASH || '');
+  const supplied = String(code || '').trim();
+  const configuredCode = String(process.env.ADMIN_RECOVERY_CODE || '').trim();
+  if (configuredCode) {
+    const suppliedDigest = createHmac('sha256', 'portfolio-recovery').update(supplied).digest();
+    const configuredDigest = createHmac('sha256', 'portfolio-recovery').update(configuredCode).digest();
+    return timingSafeEqual(suppliedDigest, configuredDigest);
+  }
+  return verifyPassword(supplied, process.env.ADMIN_RECOVERY_HASH || '');
 }
 
 export async function getSessionEpoch(sql) {
